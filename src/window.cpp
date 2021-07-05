@@ -1,9 +1,12 @@
 #include <wx/wx.h>
 #include "window.h"
 #include "welcomePanel.h"
+#include "menu.h"
 
 Window::Window(const wxString& title):wxFrame(NULL, wxID_ANY, title){
     WelcomePanel *welcomePanel = new WelcomePanel(this);
+    Menu *menu = new Menu;
+    menu->Show(true);
 
     menubar = new wxMenuBar;
 
