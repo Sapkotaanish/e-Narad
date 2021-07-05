@@ -12,10 +12,15 @@ class Window : public wxFrame{
 
         wxMenuBar *menubar;
         wxMenu *file;
+        wxMenu *help;
+        wxMenu *about;
         wxMenu *imp;
+        wxMenu *ShareBro;
         wxMenuItem *quit;
 
         void OnQuit(wxCommandEvent& title);
+        void OnClose(wxCloseEvent& event);
+
 };
 
 #endif
