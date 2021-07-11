@@ -42,15 +42,17 @@ void Server::send(std::string src_file) {
   unsigned int packet_size = sendable_size < 300 ? sendable_size : 300;
   char data[packet_size];
   i_file.seekg(0, std::ios::beg);
-  int percentage = 0;
   int sent_size = 0;
   while (!i_file.eof()) {
     i_file.read(data, packet_size);
     client.send(data, packet_size);
     sent_size += packet_size;
+<<<<<<< HEAD
     percentage = sent_size / sendable_size * 100;
     if (percentage - int(percentage) == 0)
       std::cout << int(percentage) << "% completed." << std::endl;
+=======
+>>>>>>> 610ce9198a885fff8c087757ff483b065c13e781
   }
 
   i_file.close();
