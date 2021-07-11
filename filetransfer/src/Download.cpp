@@ -16,6 +16,7 @@ void Download::download() {
   }
   Page = Http.sendRequest(Request);
   Filesize = Page.getBody().size();
+  std::cout << Filesize << std::endl;
   std::string FileContainer = Page.getBody();
   outfile.write(FileContainer.c_str(), Filesize); // Write the file
   outfile.close();
