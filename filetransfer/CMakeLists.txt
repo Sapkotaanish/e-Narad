@@ -1,4 +1,5 @@
 project(filetransfer)
-set(SFMLinkers -lsfml-graphics -lsfml-network -lsfml-window -lsfml-system)
-    add_executable(filetransfer main.cpp src/Client.cpp src/Server.cpp src/Download.cpp)
+set(SFMLinkers -lsfml-graphics -lsfml-network -lsfml-window -lsfml-system -lpthread)
+include_directories(src)
+add_executable(filetransfer main.cpp src/FileClient.cpp src/FileServer.cpp src/Download.cpp src/MessageClient.cpp src/MessageServer.cpp)
 target_link_libraries(filetransfer ${SFMLinkers})
