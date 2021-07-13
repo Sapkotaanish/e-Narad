@@ -2,14 +2,14 @@
 #include <iostream>
 #include "welcomePanel.h"
 
-WelcomePanel::WelcomePanel(Window *window) : wxPanel(window, wxID_ANY, wxDefaultPosition, wxSize(200, 800)){
+WelcomePanel::WelcomePanel(Window* window) : wxPanel(window, wxID_ANY, wxDefaultPosition, wxSize(200, 800)) {
 
     currentWindow = window;
 
-    wxButton *createButton = new wxButton(this, create_button, "Create Hotspot", wxDefaultPosition, wxSize(150,40));
-    wxButton *joinButton = new wxButton(this, join_button, "Join Hotspot", wxDefaultPosition, wxSize(150,40));
+    wxButton* createButton = new wxButton(this, create_button, "Send", wxDefaultPosition, wxSize(150, 40));
+    wxButton* joinButton = new wxButton(this, join_button, "Receive", wxDefaultPosition, wxSize(150, 40));
 
-    wxBoxSizer * pSizer = new wxBoxSizer( wxVERTICAL );
+    wxBoxSizer* pSizer = new wxBoxSizer(wxVERTICAL);
 
     pSizer->AddStretchSpacer(1);
     pSizer->Add(createButton, 0, wxALIGN_CENTER);
@@ -20,15 +20,21 @@ WelcomePanel::WelcomePanel(Window *window) : wxPanel(window, wxID_ANY, wxDefault
     this->SetSizer(pSizer);
     this->Layout();
 
-    createButton->Bind(wxEVT_BUTTON, &WelcomePanel::onCreateClick, this);
+    //opens file dialog on click
+    Connect(create_button, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(WelcomePanel::onCreateClick));
     joinButton->Bind(wxEVT_BUTTON, &WelcomePanel::onJoinClick, this);
 
 };
 
-void WelcomePanel::onCreateClick(wxCommandEvent &event){
-    currentWindow->setStatus(wxString("Creating Hotspot"));
+void WelcomePanel::onCreateClick(wxCommandEvent& event) {
+    // currentWindow->setStatus(wxString("Creating Hotspot"));
+    wxFileDialog* openFileDialog = new wxFileDialog(this);
+    if (openFileDialog->ShowModal() == wxID_OK) {
+        wxString filename = openFileDialog->GetPath();
+        return;
+    }
 };
 
-void WelcomePanel::onJoinClick(wxCommandEvent &event){
+void WelcomePanel::onJoinClick(wxCommandEvent& event) {
     currentWindow->setStatus(wxString("Joining Hotspot"));
 };
