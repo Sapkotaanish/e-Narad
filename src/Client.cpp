@@ -60,6 +60,7 @@ void Client::Receive()
     outfile.close();
     packet << "Completed.";
     socket.send(packet);
+    std::cout << "Completed transfer of " << i+ 1 << " file.";
   }
 }
 Client::~Client() { socket.disconnect(); }
