@@ -2,18 +2,21 @@
 #include "window.h"
 #include "Client.hpp"
 #include "Server.hpp"
+#include <thread>
 
-
-enum {
+enum
+{
     create_button,
     join_button,
 };
 
-class WelcomePanel : public wxPanel {
-public:
-    WelcomePanel(Window* window);
-
-    Window* currentWindow;
+class WelcomePanel : public wxPanel
+{
+private:
+    wxArrayString files;
+    std::thread t;
+    void Send();
+    void Receive();
 
 
     void onCreateClick(wxCommandEvent& event);
