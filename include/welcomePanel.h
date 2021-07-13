@@ -18,8 +18,10 @@ private:
     void Send();
     void Receive();
 
-
     void onCreateClick(wxCommandEvent& event);
     void onJoinClick(wxCommandEvent& event);
     void showDialog();
+    public:
+    WelcomePanel(Window* window);
+    ~WelcomePanel();
 };

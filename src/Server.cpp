@@ -1,31 +1,18 @@
 #include "../include/Server.hpp"
-<<<<<<< HEAD
 #include <thread>
 
-Server::Server(unsigned int port) : port(port) {
-
-}
-
-void Server::start(){
-=======
 Server::Server(unsigned int port, wxArrayString files) : port(port), files(files)
 {
   std::cout << "HEllo world" << std::endl;
->>>>>>> 9b5ac9b0ba51a33dcacfbbe2495082f2f8007314
   Listen();
   Accept();
   Send();
 }
-<<<<<<< HEAD
 
-void Server::Listen() {
-  if (listener.listen(port) != sf::Socket::Done) {
-=======
 void Server::Listen()
 {
   if (listener.listen(port) != sf::Socket::Done)
   {
->>>>>>> 9b5ac9b0ba51a33dcacfbbe2495082f2f8007314
     std::cout << "Error While Listening. " << std::endl;
     listener.close();
     exit(1);
