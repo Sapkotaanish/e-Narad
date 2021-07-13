@@ -28,10 +28,14 @@ WelcomePanel::WelcomePanel(Window* window) : wxPanel(window, wxID_ANY, wxDefault
 
 void WelcomePanel::onCreateClick(wxCommandEvent& event) {
     // currentWindow->setStatus(wxString("Creating Hotspot"));
-    wxFileDialog* openFileDialog = new wxFileDialog(this);
+    wxFileDialog* openFileDialog = new wxFileDialog(this, "", "", "", "", wxFD_MULTIPLE | wxFD_PREVIEW);
     if (openFileDialog->ShowModal() == wxID_OK) {
-        wxString filename = openFileDialog->GetPath();
-        std::cout << "Selected files: " << filename << std::endl;
+        wxArrayString filename;
+        openFileDialog->GetPaths(filename);
+        for (auto file : filename) {
+            std::cout << "Selected files: " << file << std::endl;
+        }
+
     }
 };
 
