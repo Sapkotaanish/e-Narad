@@ -31,7 +31,7 @@ void WelcomePanel::onCreateClick(wxCommandEvent& event) {
     wxFileDialog* openFileDialog = new wxFileDialog(this);
     if (openFileDialog->ShowModal() == wxID_OK) {
         wxString filename = openFileDialog->GetPath();
-        return;
+        std::cout << "Selected files: " << filename << std::endl;
     }
 };
 
