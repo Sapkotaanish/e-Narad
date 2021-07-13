@@ -2,15 +2,15 @@
 #include <iostream>
 #include "welcomePanel.h"
 
-WelcomePanel::WelcomePanel(Window *window) : wxPanel(window, wxID_ANY, wxDefaultPosition, wxSize(200, 800))
+WelcomePanel::WelcomePanel(Window* window) : wxPanel(window, wxID_ANY, wxDefaultPosition, wxSize(200, 800))
 {
 
     currentWindow = window;
 
-    wxButton *createButton = new wxButton(this, create_button, "Send", wxDefaultPosition, wxSize(150, 40));
-    wxButton *joinButton = new wxButton(this, join_button, "Receive", wxDefaultPosition, wxSize(150, 40));
+    wxButton* createButton = new wxButton(this, create_button, "Send", wxDefaultPosition, wxSize(150, 40));
+    wxButton* joinButton = new wxButton(this, join_button, "Receive", wxDefaultPosition, wxSize(150, 40));
 
-    wxBoxSizer *pSizer = new wxBoxSizer(wxVERTICAL);
+    wxBoxSizer* pSizer = new wxBoxSizer(wxVERTICAL);
 
     pSizer->AddStretchSpacer(1);
     pSizer->Add(createButton, 0, wxALIGN_CENTER);
@@ -26,10 +26,10 @@ WelcomePanel::WelcomePanel(Window *window) : wxPanel(window, wxID_ANY, wxDefault
     joinButton->Bind(wxEVT_BUTTON, &WelcomePanel::onJoinClick, this);
 };
 
-void WelcomePanel::onCreateClick(wxCommandEvent &event)
+void WelcomePanel::onCreateClick(wxCommandEvent& event)
 {
 
-    wxFileDialog *openFileDialog = new wxFileDialog(this, "", "", "", "", wxFD_MULTIPLE | wxFD_PREVIEW);
+    wxFileDialog* openFileDialog = new wxFileDialog(this, "", "", "", "", wxFD_MULTIPLE | wxFD_PREVIEW);
     if (openFileDialog->ShowModal() == wxID_OK)
     {
         openFileDialog->GetPaths(files);
@@ -37,7 +37,7 @@ void WelcomePanel::onCreateClick(wxCommandEvent &event)
     }
 };
 
-void WelcomePanel::onJoinClick(wxCommandEvent &event)
+void WelcomePanel::onJoinClick(wxCommandEvent& event)
 {
     t = std::thread(&WelcomePanel::Receive, this);
     currentWindow->setStatus(wxString("Receive"));
