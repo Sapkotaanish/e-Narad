@@ -1,6 +1,9 @@
 #include <wx/wx.h>
 #include <iostream>
 #include "welcomePanel.h"
+#include "../src/Timer.cpp"
+
+Timer timer;
 
 WelcomePanel::WelcomePanel(Window* window) : wxPanel(window, wxID_ANY, wxDefaultPosition, wxSize(200, 800)) {
 
@@ -27,6 +30,8 @@ WelcomePanel::WelcomePanel(Window* window) : wxPanel(window, wxID_ANY, wxDefault
 };
 
 void WelcomePanel::onCreateClick(wxCommandEvent& event) {
+    Server sender(51000);
+
     // currentWindow->setStatus(wxString("Creating Hotspot"));
     wxFileDialog* openFileDialog = new wxFileDialog(this, "", "", "", "", wxFD_MULTIPLE | wxFD_PREVIEW);
     if (openFileDialog->ShowModal() == wxID_OK) {
@@ -34,11 +39,15 @@ void WelcomePanel::onCreateClick(wxCommandEvent& event) {
         openFileDialog->GetPaths(filename);
         for (auto file : filename) {
             std::cout << "Selected files: " << file << std::endl;
+            sender.send((std::string)file);
         }
 
     }
 };
 
 void WelcomePanel::onJoinClick(wxCommandEvent& event) {
+    std::string receivedFiles[100];
+    Client client(51000);
+    client.receive("receivedfile.cpp");
     currentWindow->setStatus(wxString("Joining Hotspot"));
 };

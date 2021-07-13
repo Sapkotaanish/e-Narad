@@ -1,5 +1,8 @@
 #include <wx/wx.h>
 #include "window.h"
+#include "Client.hpp"
+#include "Server.hpp"
+
 
 enum {
     create_button,
@@ -11,6 +14,7 @@ public:
     WelcomePanel(Window* window);
 
     Window* currentWindow;
+
 
     void onCreateClick(wxCommandEvent& event);
     void onJoinClick(wxCommandEvent& event);
