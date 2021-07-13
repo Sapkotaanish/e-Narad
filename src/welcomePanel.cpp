@@ -1,9 +1,6 @@
 #include <wx/wx.h>
 #include <iostream>
 #include "welcomePanel.h"
-#include "../src/Timer.cpp"
-
-Timer timer;
 
 WelcomePanel::WelcomePanel(Window *window) : wxPanel(window, wxID_ANY, wxDefaultPosition, wxSize(200, 800))
 {
@@ -36,13 +33,13 @@ void WelcomePanel::onCreateClick(wxCommandEvent &event)
     if (openFileDialog->ShowModal() == wxID_OK)
     {
         openFileDialog->GetPaths(files);
-        t = std::thread(Send);
+        t = std::thread(&WelcomePanel::Send, this);
     }
 };
 
 void WelcomePanel::onJoinClick(wxCommandEvent &event)
 {
-    t = std::thread(Receive);
+    t = std::thread(&WelcomePanel::Receive, this);
     currentWindow->setStatus(wxString("Receive"));
 };
 

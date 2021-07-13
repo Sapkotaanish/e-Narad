@@ -1,8 +1,8 @@
 #include <wx/wx.h>
-#include <thread>
 #include "window.h"
 #include "Client.hpp"
 #include "Server.hpp"
+#include <thread>
 
 enum
 {
@@ -20,9 +20,7 @@ private:
 
 public:
     WelcomePanel(Window *window);
-
     Window *currentWindow;
-
     void onCreateClick(wxCommandEvent &event);
     void onJoinClick(wxCommandEvent &event);
     ~WelcomePanel();

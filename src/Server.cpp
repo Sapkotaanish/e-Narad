@@ -1,7 +1,7 @@
-#include "../include/Client.hpp"
 #include "../include/Server.hpp"
 Server::Server(unsigned int port, wxArrayString files) : port(port), files(files)
 {
+  std::cout << "HEllo world" << std::endl;
   Listen();
   Accept();
   Send();
@@ -39,7 +39,7 @@ void Server::Accept()
 void Server::Send()
 {
   sf::Packet packet;
-  sf::Uint8 file_count= files.size();
+  sf::Uint8 file_count = files.size();
   packet << file_count;
   client.send(packet);
   for (auto i : files)
