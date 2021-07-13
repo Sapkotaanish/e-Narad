@@ -5,6 +5,7 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <thread>
 
 class Server {
 private:
@@ -13,6 +14,7 @@ private:
 
 public:
   Server(unsigned int port);
+  void start();
   void send(std::string file_name);
   ~Server();
 

@@ -1,9 +1,7 @@
 #include <wx/wx.h>
 #include <iostream>
 #include "welcomePanel.h"
-#include "../src/Timer.cpp"
-
-Timer timer;
+#include <thread>
 
 WelcomePanel::WelcomePanel(Window* window) : wxPanel(window, wxID_ANY, wxDefaultPosition, wxSize(200, 800)) {
 
@@ -29,20 +27,35 @@ WelcomePanel::WelcomePanel(Window* window) : wxPanel(window, wxID_ANY, wxDefault
 
 };
 
+
 void WelcomePanel::onCreateClick(wxCommandEvent& event) {
     Server sender(51000);
+    std::thread t1(&Server::start, &sender);
 
-    // currentWindow->setStatus(wxString("Creating Hotspot"));
-    wxFileDialog* openFileDialog = new wxFileDialog(this, "", "", "", "", wxFD_MULTIPLE | wxFD_PREVIEW);
-    if (openFileDialog->ShowModal() == wxID_OK) {
-        wxArrayString filename;
-        openFileDialog->GetPaths(filename);
-        for (auto file : filename) {
-            std::cout << "Selected files: " << file << std::endl;
-            sender.send((std::string)file);
-        }
+    wxMessageDialog *dial = new wxMessageDialog(NULL,
+    wxT("Ask your friend to join..."), wxT("Listening"),
+    wxYES_NO);
+    dial->SetYesNoLabels(_("&Done"), _("&Cancel"));
+    int ret = dial->ShowModal();
 
+    if(ret == wxID_NO){
+        t1.detach();
+    }else{
+        currentWindow->setStatus(wxString("Creating Hotspot"));
+        wxFileDialog* openFileDialog = new wxFileDialog(this, "", "", "", "", wxFD_MULTIPLE | wxFD_PREVIEW);
+        if (openFileDialog->ShowModal() == wxID_OK) {
+            wxArrayString filename;
+            openFileDialog->GetPaths(filename);
+            for (auto file : filename) {
+                std::cout << "Selected files: " << file << std::endl;
+                sender.send((std::string)file);
+            }
+
+        };
+
+        t1.detach();
     }
+
 };
 
 void WelcomePanel::onJoinClick(wxCommandEvent& event) {
@@ -51,3 +64,17 @@ void WelcomePanel::onJoinClick(wxCommandEvent& event) {
     client.receive("receivedfile.cpp");
     currentWindow->setStatus(wxString("Joining Hotspot"));
 };
+
+void WelcomePanel::showDialog(){
+    wxMessageDialog *dial = new wxMessageDialog(NULL,
+    wxT("Ask your friend to join..."), wxT("Listening"),
+    wxOK);
+    dial->SetOKLabel(_("&Cancel"));
+    int ret = dial->ShowModal();
+
+    std::cout << ret;
+    if (ret == wxID_OK) {
+        Destroy();
+    };
+
+}

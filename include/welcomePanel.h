@@ -18,4 +18,5 @@ public:
 
     void onCreateClick(wxCommandEvent& event);
     void onJoinClick(wxCommandEvent& event);
+    void showDialog();
 };

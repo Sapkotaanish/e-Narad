@@ -1,9 +1,16 @@
 #include "../include/Client.hpp"
 #include "../include/Server.hpp"
+#include <thread>
+
 Server::Server(unsigned int port) : port(port) {
+
+}
+
+void Server::start(){
   Listen();
   Accept();
 }
+
 void Server::Listen() {
   if (listener.listen(port) != sf::Socket::Done) {
     std::cout << "Error While Listening. " << std::endl;
