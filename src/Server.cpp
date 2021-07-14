@@ -31,7 +31,7 @@ void Server::Accept()
   else
   {
     std::cout << "Connected to receiver with IP " << client.getRemoteAddress()
-              << " .";
+      << " .";
     std::cout << "My IP " << sf::IpAddress::getLocalAddress() << std::endl;
   }
 }
