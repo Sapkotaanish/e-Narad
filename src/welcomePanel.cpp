@@ -34,6 +34,8 @@ void WelcomePanel::onCreateClick(wxCommandEvent& event)
     {
         openFileDialog->GetPaths(files);
         t = std::thread(&WelcomePanel::Send, this);
+        t.join();
+
     }
 };
 
@@ -41,6 +43,8 @@ void WelcomePanel::onJoinClick(wxCommandEvent& event)
 {
     t = std::thread(&WelcomePanel::Receive, this);
     currentWindow->setStatus(wxString("Receive"));
+    t.join();
+
 };
 
 void WelcomePanel::Send()
@@ -55,5 +59,6 @@ void WelcomePanel::Receive()
 
 WelcomePanel::~WelcomePanel()
 {
-    t.join();
+    std::cout << "its working dick heads." << std::endl;
+    // t.join();
 }
