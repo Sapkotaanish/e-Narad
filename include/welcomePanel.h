@@ -1,6 +1,7 @@
 #include "Client.hpp"
 #include "Server.hpp"
 #include "window.h"
+#include <mutex>
 #include <thread>
 #include <wx/wx.h>
 
@@ -16,6 +17,7 @@ private:
   void Send();
   void Receive();
   bool initialized;
+  bool sending, receiving;
   unsigned int sender_port, receiver_port;
 
 public:

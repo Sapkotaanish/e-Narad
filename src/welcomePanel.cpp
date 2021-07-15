@@ -14,7 +14,7 @@ WelcomePanel::WelcomePanel(Window *window)
                                       wxDefaultPosition, wxSize(150, 40));
 
   wxBoxSizer *pSizer = new wxBoxSizer(wxVERTICAL);
-
+  sending = false;
   pSizer->AddStretchSpacer(1);
   pSizer->Add(createButton, 0, wxALIGN_CENTER);
   pSizer->AddSpacer((10, 10));
@@ -33,37 +33,68 @@ WelcomePanel::WelcomePanel(Window *window)
 void WelcomePanel::onCreateClick(wxCommandEvent &event) {
 
   if (!initialized) {
-    sender_port = 51000;
-    receiver_port = 51001;
+    std::mutex m;
+    m.lock();
+    sender_port = 50000;
+    receiver_port = 48000;
     initialized = true;
+    m.unlock();
   }
-  wxFileDialog *openFileDialog =
-      new wxFileDialog(this, "", "", "", "", wxFD_MULTIPLE | wxFD_PREVIEW);
-  if (openFileDialog->ShowModal() == wxID_OK) {
-    openFileDialog->GetPaths(files);
-    // t = std::thread(&WelcomePanel::Send, this);
-    // t.join();
-    std::thread thr(&WelcomePanel::Send, this);
-    thr.detach();
+
+  if (!sending) {
+    wxFileDialog *openFileDialog =
+        new wxFileDialog(this, "", "", "", "", wxFD_MULTIPLE | wxFD_PREVIEW);
+    if (openFileDialog->ShowModal() == wxID_OK) {
+      openFileDialog->GetPaths(files);
+      Server::count = files.size();
+      std::thread thr(&WelcomePanel::Send, this);
+      thr.detach();
+    }
+  } else {
+    std::cout << "sending already" << std::endl;
   }
 };
 
 void WelcomePanel::onJoinClick(wxCommandEvent &event) {
   currentWindow->setStatus(wxString("Receive"));
   if (!initialized) {
-    sender_port = 51001;
-    receiver_port = 51000;
+    std::mutex m;
+    sender_port = 48000;
+    receiver_port = 50000;
     initialized = true;
   }
-  std::thread thr(&WelcomePanel::Receive, this);
-  thr.detach();
+  if (!receiving) {
+    std::thread thr(&WelcomePanel::Receive, this);
+    thr.detach();
+  } else {
+    std::cout << "Receiving already" << std::endl;
+  }
 };
 
-void WelcomePanel::Send() { Server server(sender_port, files); }
+void WelcomePanel::Send() {
+  std::mutex m;
+  m.lock();
+  sending = true;
+  m.unlock();
+  Server server(sender_port, files);
+  m.lock();
+  sending = false;
+  m.unlock();
+  sender_port++;
+}
 
-void WelcomePanel::Receive() { Client client(receiver_port); }
+void WelcomePanel::Receive() {
+  std::mutex m;
+  m.lock();
+  receiving = true;
+  m.unlock();
+  Client client(receiver_port);
+  m.lock();
+  receiving = false;
+  m.unlock();
+  receiver_port++;
+}
 
 WelcomePanel::~WelcomePanel() {
   std::cout << "its working dick heads." << std::endl;
-  // t.join();
 }
