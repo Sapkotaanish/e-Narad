@@ -67,3 +67,5 @@ Server::~Server() {
   client.disconnect();
   listener.close();
 }
+
+unsigned int Server::count = 0;

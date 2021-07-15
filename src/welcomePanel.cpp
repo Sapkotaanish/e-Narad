@@ -17,7 +17,7 @@ WelcomePanel::WelcomePanel(Window *window)
   sending = false;
   pSizer->AddStretchSpacer(1);
   pSizer->Add(createButton, 0, wxALIGN_CENTER);
-  pSizer->AddSpacer((10, 10));
+  // pSizer->AddSpacer((10, 10));
   pSizer->Add(joinButton, 0, wxALIGN_CENTER);
   pSizer->AddStretchSpacer(1);
 

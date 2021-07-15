@@ -53,5 +53,4 @@ void Client::Receive() {
   }
 }
 Client::~Client() { socket.disconnect(); }
-
 unsigned int Client::count = 0;
