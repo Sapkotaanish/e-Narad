@@ -20,19 +20,10 @@ private:
   bool sending, receiving;
   unsigned int sender_port, receiver_port;
 
-<<<<<<< HEAD
-    void onCreateClick(wxCommandEvent& event);
-    void onJoinClick(wxCommandEvent& event);
-    void showDialog();
-    public:
-    WelcomePanel(Window* window);
-    ~WelcomePanel();
-=======
 public:
   WelcomePanel(Window *window);
   Window *currentWindow;
   void onCreateClick(wxCommandEvent &event);
   void onJoinClick(wxCommandEvent &event);
   ~WelcomePanel();
->>>>>>> integration
 };

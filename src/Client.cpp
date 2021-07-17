@@ -52,11 +52,7 @@ void Client::Receive() {
     outfile.close();
     packet << "Completed.";
     socket.send(packet);
-<<<<<<< HEAD
-    std::cout << "Completed transfer of " << i+ 1 << " file.";
-=======
     count--;
->>>>>>> integration
   }
 }
 Client::~Client() { socket.disconnect(); }

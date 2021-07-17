@@ -4,14 +4,12 @@
 #include <fstream>
 #include <iostream>
 #include <string>
-<<<<<<< HEAD
 #include <thread>
-=======
 #include <wx/wx.h>
->>>>>>> integration
 
 class Server {
 private:
+  void BroadCast();
   void Listen();
   void Accept();
   void Send();
