@@ -44,12 +44,14 @@ void Server::Send() {
     sf::Packet packet;
     std::size_t size = i_file.seekg(0, std::ios::end).tellg();
     std::cout << "Size: " << size << std::endl;
-    sf::Uint32 sendable_size = (int)size;
+    std::size_t sendable_size = size;
+    std::cout << "Sendable size: " << sendable_size << std::endl;
     packet << static_cast<std::string>(i);
-    packet << sendable_size;
+    packet << (sf::Uint64)sendable_size;
     client.send(packet);
-    const unsigned int packet_size =
-      sendable_size < 1000 ? sendable_size : 1000;
+    const size_t packet_size =
+      sendable_size < 10000 ? sendable_size : 10000;
+    std::cout << "Packet size in server: " << packet_size << std::endl;
     char data[packet_size];
     i_file.seekg(0, std::ios::beg);
     int sent_size = 0;
