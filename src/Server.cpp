@@ -42,7 +42,8 @@ void Server::Send() {
       exit(1);
     }
     sf::Packet packet;
-    std::size_t size = i_file.tellg();
+    std::size_t size = i_file.seekg(0, std::ios::end).tellg();
+    std::cout << "Size: " << size << std::endl;
     sf::Uint32 sendable_size = (int)size;
     packet << static_cast<std::string>(i);
     packet << sendable_size;
