@@ -21,9 +21,9 @@ private:
   unsigned int sender_port, receiver_port;
 
 public:
-  WelcomePanel(Window *window);
-  Window *currentWindow;
-  void onCreateClick(wxCommandEvent &event);
-  void onJoinClick(wxCommandEvent &event);
+  WelcomePanel(Window* window);
+  Window* currentWindow;
+  void onCreateClick(wxCommandEvent& event);
+  void onJoinClick(wxCommandEvent& event);
   ~WelcomePanel();
 };

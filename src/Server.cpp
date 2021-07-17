@@ -31,7 +31,8 @@ void Server::Accept() {
 
 void Server::Send() {
   sf::Packet packet;
-  sf::Uint8 file_count = files.size();
+  sf::Uint8 file_count = files.GetCount();
+  std::cout << "File count in server: " << (int)file_count << std::endl;
   packet << file_count;
   client.send(packet);
   for (auto i : files) {
@@ -50,12 +51,12 @@ void Server::Send() {
     packet << (sf::Uint64)sendable_size;
     client.send(packet);
     const size_t packet_size =
-      sendable_size < 10000 ? sendable_size : 10000;
+      sendable_size < 300 ? sendable_size : 300;
     std::cout << "Packet size in server: " << packet_size << std::endl;
     char data[packet_size];
     i_file.seekg(0, std::ios::beg);
     int sent_size = 0;
-    while (i_file.good()) {
+    while (!i_file.eof()) {
       i_file.read(data, packet_size);
       client.send(data, packet_size);
       sent_size += packet_size;

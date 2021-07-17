@@ -65,7 +65,7 @@ void WelcomePanel::onCreateClick(wxCommandEvent& event) {
 };
 
 void WelcomePanel::onJoinClick(wxCommandEvent& event) {
-  currentWindow->setStatus(wxString("Receive"));
+  currentWindow->setStatus("Receiving...");
   if (!initialized) {
     std::mutex m;
     sender_port = 48000;
