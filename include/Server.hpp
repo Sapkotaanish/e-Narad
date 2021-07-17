@@ -1,20 +1,23 @@
 #pragma once
-#include <wx/wx.h>
 #include <SFML/Network.hpp>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <string>
+<<<<<<< HEAD
 #include <thread>
+=======
+#include <wx/wx.h>
+>>>>>>> integration
 
-class Server
-{
+class Server {
 private:
   void Listen();
   void Accept();
   void Send();
 
 public:
+  static unsigned int count;
   Server(unsigned int port, wxArrayString files);
   ~Server();
 

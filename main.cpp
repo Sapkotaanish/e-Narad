@@ -1,14 +1,13 @@
 #include "main.h"
 #include "window.h"
 
-
 IMPLEMENT_APP(MyApp);
 
 bool MyApp::OnInit() {
-    Window* window = new Window(wxString("Share Project"));
-    window->Show(true);
+  Window *window = new Window(wxString("Share Project"));
+  window->Show(true);
 
-    //window->Maximize();
+  // window->Maximize();
 
-    return true;
+  return true;
 };

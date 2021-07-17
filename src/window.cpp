@@ -2,10 +2,11 @@
 #include "window.h"
 #include "welcomePanel.h"
 
-Window::Window(const wxString& title):wxFrame(NULL, wxID_ANY, title){
-    WelcomePanel *welcomePanel = new WelcomePanel(this);
-
+Window::Window(const wxString& title) :wxFrame(NULL, wxID_ANY, title) {
+    WelcomePanel* welcomePanel = new WelcomePanel(this);
+    SetBackgroundColour(wxColor("#D0BFBF"));
     menubar = new wxMenuBar;
+    menubar->SetBackgroundColour(wxColor("#3D50C6"));
     about = new wxMenu;
     help = new wxMenu;
     ShareBro = new wxMenu;
@@ -17,7 +18,7 @@ Window::Window(const wxString& title):wxFrame(NULL, wxID_ANY, title){
     file->AppendSeparator();
 
     imp = new wxMenu;
-    imp -> Append(wxID_ANY, wxT("1"));
+    imp->Append(wxID_ANY, wxT("1"));
     imp->Append(wxID_ANY, wxT("2"));
     imp->Append(wxID_ANY, wxT("3"));
 
@@ -35,27 +36,28 @@ Window::Window(const wxString& title):wxFrame(NULL, wxID_ANY, title){
     CreateStatusBar();
 };
 
-void Window::OnQuit(wxCommandEvent& WXUNUSED(event)){
+void Window::OnQuit(wxCommandEvent& WXUNUSED(event)) {
     Close(true);
 }
 
-void Window::OnClose(wxCloseEvent& event) 
+void Window::OnClose(wxCloseEvent& event)
 {
-  wxMessageDialog *dial = new wxMessageDialog(NULL,
-    wxT("Are you sure to quit?"), wxT("Question"),
-    wxYES_NO | wxNO_DEFAULT | wxICON_QUESTION);
+    wxMessageDialog* dial = new wxMessageDialog(NULL,
+        wxT("Are you sure to quit?"), wxT("Question"),
+        wxYES_NO | wxNO_DEFAULT | wxICON_QUESTION);
 
     int ret = dial->ShowModal();
     dial->Destroy();
 
     if (ret == wxID_YES) {
         Destroy();
-    } else {
+    }
+    else {
         event.Veto();
     }
 }
 
 
-void Window::setStatus(wxString status){
+void Window::setStatus(wxString status) {
     SetStatusText(status);
 }

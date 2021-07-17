@@ -1,18 +1,18 @@
 #pragma once
 #include <SFML/Network.hpp>
-#include <wx/wx.h>
 #include <cstring>
 #include <fstream>
 #include <iostream>
 #include <sys/stat.h>
+#include <wx/wx.h>
 
-class Client
-{
+class Client {
 private:
   void Connect();
   void Receive();
 
 public:
+  static unsigned int count;
   Client(unsigned int port);
   ~Client();
 
