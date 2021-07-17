@@ -52,7 +52,7 @@ void Server::Send() {
     char data[packet_size];
     i_file.seekg(0, std::ios::beg);
     int sent_size = 0;
-    while (!i_file.eof() && sent_size < sendable_size) {
+    while (i_file.good()) {
       i_file.read(data, packet_size);
       client.send(data, packet_size);
       sent_size += packet_size;
