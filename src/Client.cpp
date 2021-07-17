@@ -41,7 +41,7 @@ void Client::Receive() {
       exit(1);
     }
 
-    while (received_size < size_of_file) {
+    while (received_size < size_of_file && !socket.receive(packet)) {
       socket.receive(data, packet_size, byte_received);
       outfile.write(data, packet_size);
       received_size += byte_received;
