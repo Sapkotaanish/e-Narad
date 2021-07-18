@@ -1,26 +1,19 @@
 #include "welcomePanel.h"
 #include <iostream>
-#include <thread>
 #include <wx/wx.h>
 
 WelcomePanel::WelcomePanel(Window *window)
     : wxPanel(window, wxID_ANY, wxDefaultPosition, wxSize(200, 800)),
       initialized(false) {
-  window->SetBackgroundColour(wxColor("#fff"));
-  wxBoxSizer *pSizer = new wxBoxSizer(wxVERTICAL);
 
   currentWindow = window;
 
   wxButton *createButton = new wxButton(this, create_button, "Send",
                                         wxDefaultPosition, wxSize(150, 40));
-  pSizer->AddStretchSpacer(1);
-
   wxButton *joinButton = new wxButton(this, join_button, "Receive",
                                       wxDefaultPosition, wxSize(150, 40));
 
-  createButton->SetBackgroundColour(wxColor("#3D50C6"));
-  joinButton->SetBackgroundColour(wxColor("#3D50C6"));
-
+  wxBoxSizer *pSizer = new wxBoxSizer(wxVERTICAL);
   sending = false;
   pSizer->AddStretchSpacer(1);
   pSizer->Add(createButton, 0, wxALIGN_CENTER);
@@ -47,22 +40,23 @@ void WelcomePanel::onCreateClick(wxCommandEvent &event) {
     initialized = true;
     m.unlock();
   }
+
   if (!sending) {
     wxFileDialog *openFileDialog =
         new wxFileDialog(this, "", "", "", "", wxFD_MULTIPLE | wxFD_PREVIEW);
     if (openFileDialog->ShowModal() == wxID_OK) {
       openFileDialog->GetPaths(files);
-      Server::count = files.size();
       std::thread thr(&WelcomePanel::Send, this);
       thr.detach();
     }
+  } else {
+    std::cout << "sending already" << std::endl;
   }
-}
+};
 
 void WelcomePanel::onJoinClick(wxCommandEvent &event) {
   currentWindow->setStatus(wxString("Receive"));
   if (!initialized) {
-    std::mutex m;
     sender_port = 48000;
     receiver_port = 50000;
     initialized = true;
@@ -76,14 +70,9 @@ void WelcomePanel::onJoinClick(wxCommandEvent &event) {
 };
 
 void WelcomePanel::Send() {
-  std::mutex m;
-  m.lock();
   sending = true;
-  m.unlock();
   Server server(sender_port, files);
-  m.lock();
   sending = false;
-  m.unlock();
   sender_port++;
 }
 

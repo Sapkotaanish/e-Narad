@@ -33,7 +33,9 @@ void Server::Send() {
   sf::Packet packet;
   sf::Uint8 file_count = files.size();
   packet << file_count;
+  Server::statistics.total_count = file_count;
   client.send(packet);
+  int count = 0;
   for (auto i : files) {
     std::ifstream i_file(i, std::ios::ate | std::ios::binary);
     if (!i_file.is_open()) {
@@ -41,11 +43,12 @@ void Server::Send() {
       listener.close();
       exit(1);
     }
+    Server::statistics.current_count = ++count;
     sf::Packet packet;
     std::size_t size = i_file.seekg(0, std::ios::end).tellg();
     std::cout << "Size: " << size << std::endl;
     std::size_t sendable_size = size;
-    std::cout << "Sendable size: " << sendable_size << std::endl;
+    Server::statistics.total_size = (sf::Uint64)sendable_size;
     packet << static_cast<std::string>(i);
     packet << (sf::Uint64)sendable_size;
     client.send(packet);
@@ -58,13 +61,14 @@ void Server::Send() {
       i_file.read(data, packet_size);
       client.send(data, packet_size);
       sent_size += packet_size;
+      Server::statistics.sent_size = sent_size;
     }
 
+    Server::statistics.sent_size = 0;
     i_file.close();
     client.receive(packet);
     std::string s;
     packet >> s;
-    count--;
   }
 }
 Server::~Server() {
@@ -72,4 +76,4 @@ Server::~Server() {
   listener.close();
 }
 
-unsigned int Server::count = 0;
+stats Server::statistics{0, 0, 0, 0};

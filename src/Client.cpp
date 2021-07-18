@@ -18,8 +18,9 @@ void Client::Receive() {
   socket.receive(packet);
   sf::Uint8 file_count;
   packet >> file_count;
-  count = file_count;
+  statistics.total_count = file_count;
   for (int i = 0; i < file_count; i++) {
+    statistics.current_count = i + 1;
     struct stat buf;
     sf::Uint64 size;
     sf::Packet packet;
@@ -29,6 +30,7 @@ void Client::Receive() {
     packet >> file_name >> size;
     std::cout << "Size in client: " << size << std::endl;
     std::size_t size_of_file = (std::size_t)size;
+    statistics.total_size = size_of_file;
     const sf::Uint64 packet_size = size_of_file < 10000 ? size_of_file : 10000;
     std::cout << "Packet size in client: " << packet_size << std::endl;
     char data[packet_size];
@@ -47,13 +49,14 @@ void Client::Receive() {
       socket.receive(data, packet_size, byte_received);
       outfile.write(data, packet_size);
       received_size += byte_received;
-      std::cout << "Received: " << received_size << std::endl;
+      statistics.received_size = received_size;
     }
+    statistics.received_size = 0;
     outfile.close();
     packet << "Completed.";
     socket.send(packet);
-    count--;
   }
 }
 Client::~Client() { socket.disconnect(); }
-unsigned int Client::count = 0;
+
+stats Client::statistics{0, 0, 0, 0};
