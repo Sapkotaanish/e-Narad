@@ -6,10 +6,7 @@
 #include <string>
 #include <thread>
 #include <wx/wx.h>
-struct stats {
-  int current_count, total_count;
-  sf::Uint64 total_size, sent_size;
-};
+
 class Server {
 private:
   void BroadCast();
@@ -18,6 +15,10 @@ private:
   void Send();
 
 public:
+  struct stats {
+    int current_count, total_count;
+    sf::Uint64 total_size, sent_size;
+  };
   static stats statistics;
   Server(unsigned int port, wxArrayString files);
   ~Server();

@@ -5,10 +5,7 @@
 #include <iostream>
 #include <sys/stat.h>
 #include <wx/wx.h>
-struct stats {
-  int current_count, total_count;
-  sf::Uint64 total_size, received_size;
-};
+
 class Client {
 private:
   void Connect();
@@ -17,6 +14,10 @@ private:
 public:
   Client(unsigned int port);
   ~Client();
+  struct stats {
+    int current_count, total_count;
+    sf::Uint64 total_size, received_size;
+  };
   static stats statistics;
 
 private:

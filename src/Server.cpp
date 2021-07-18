@@ -76,4 +76,4 @@ Server::~Server() {
   listener.close();
 }
 
-stats Server::statistics{0, 0, 0, 0};
+Server::stats Server::statistics{0, 0, 0, 0};
