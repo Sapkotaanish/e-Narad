@@ -13,9 +13,9 @@ WelcomePanel::WelcomePanel(Window* window)
   wxButton* joinButton = new wxButton(this, join_button, "Receive",
     wxDefaultPosition, wxSize(150, 40));
 
-  wxGauge gauge(this, -1, 100, wxDefaultPosition, wxDefaultSize, wxGA_HORIZONTAL | wxGA_PROGRESS | wxGA_SMOOTH);
-  gauge.SetValue(20);
-  gauge.Show();
+  // wxGauge gauge(this, -1, 100, wxDefaultPosition, wxDefaultSize, wxGA_HORIZONTAL | wxGA_PROGRESS | wxGA_SMOOTH);
+  // gauge.SetValue(20);
+  // gauge.Show();
 
 
 
