@@ -1,4 +1,5 @@
 #include "../include/Client.hpp"
+Client::stats Client::statistics{ 0, 0, 0, 0 };
 
 Client::Client(unsigned int port) : port(port) {
   ip = sf::IpAddress::getLocalAddress();
@@ -21,6 +22,7 @@ void Client::Receive() {
   statistics.total_count = file_count;
   for (int i = 0; i < file_count; i++) {
     statistics.current_count = i + 1;
+    std::cout << statistics.current_count << std::endl;
     struct stat buf;
     sf::Uint64 size;
     sf::Packet packet;
@@ -58,5 +60,3 @@ void Client::Receive() {
   }
 }
 Client::~Client() { socket.disconnect(); }
-
-stats Client::statistics{0, 0, 0, 0};

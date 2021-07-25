@@ -15,6 +15,7 @@ public:
   Client(unsigned int port);
   ~Client();
   struct stats {
+  public:
     int current_count, total_count;
     sf::Uint64 total_size, received_size;
   };
