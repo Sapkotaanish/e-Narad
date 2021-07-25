@@ -12,9 +12,7 @@ private:
   void Receive();
 
 public:
-  static unsigned int count;
   float percentage_received{ 0 };
-  static unsigned int count;
   Client() {};
   Client(unsigned int port);
   ~Client();
