@@ -1,7 +1,7 @@
 #include "../include/Server.hpp"
 #include <thread>
 Server::Server(unsigned int port, wxArrayString files)
-    : port(port), files(files) {
+  : port(port), files(files) {
   Listen();
   Accept();
   Send();
@@ -12,7 +12,8 @@ void Server::Listen() {
     std::cout << "Error While Listening. " << std::endl;
     listener.close();
     exit(1);
-  } else {
+  }
+  else {
     std::cout << "Listened" << std::endl;
   }
 }
@@ -22,9 +23,10 @@ void Server::Accept() {
     listener.close();
     std::cout << "Error while accepting." << std::endl;
     exit(1);
-  } else {
+  }
+  else {
     std::cout << "Connected to receiver with IP " << client.getRemoteAddress()
-              << " .";
+      << " .";
     std::cout << "My IP " << sf::IpAddress::getLocalAddress() << std::endl;
   }
 }
@@ -76,4 +78,4 @@ Server::~Server() {
   listener.close();
 }
 
-Server::stats Server::statistics{0, 0, 0, 0};
+Server::stats Server::statistics{ 0, 0, 0, 0 };

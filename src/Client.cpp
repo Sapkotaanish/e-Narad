@@ -1,6 +1,4 @@
 #include "../include/Client.hpp"
-Client::stats Client::statistics{ 0, 0, 0, 0 };
-
 Client::Client(unsigned int port) : port(port) {
   system("mkdir -p ~/Downloads/e-Narad");
   ip = sf::IpAddress::getLocalAddress();
@@ -16,7 +14,7 @@ void Client::Connect() {
 }
 
 void Client::Receive() {
-  const char *home_dir = std::getenv("HOME");
+  const char* home_dir = std::getenv("HOME");
   sf::Packet packet;
   socket.receive(packet);
   sf::Uint8 file_count;
@@ -44,7 +42,7 @@ void Client::Receive() {
       file_name.erase(0, last_slash_idx + 1);
     }
     file_name.insert(0, static_cast<std::string>(home_dir) +
-                            "/Downloads/e-Narad/");
+      "/Downloads/e-Narad/");
     std::cout << file_name << std::endl;
     std::fstream outfile(file_name, std::ios::out | std::ios::binary);
     if (!outfile.is_open()) {
@@ -65,5 +63,5 @@ void Client::Receive() {
   }
 }
 Client::~Client() { socket.disconnect(); }
-Client::stats Client::statistics{0, 0, 0, 0};
+Client::stats Client::statistics{ 0, 0, 0, 0 };
 
