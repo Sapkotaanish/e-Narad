@@ -62,6 +62,9 @@ void Client::Receive() {
     socket.send(packet);
   }
 }
+
+//function to show progress bar in wxWidgets
+
 Client::~Client() { socket.disconnect(); }
 Client::stats Client::statistics{ 0, 0, 0, 0 };
 

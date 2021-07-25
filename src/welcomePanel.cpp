@@ -34,6 +34,7 @@ WelcomePanel::WelcomePanel(Window* window)
   Connect(create_button, wxEVT_COMMAND_BUTTON_CLICKED,
     wxCommandEventHandler(WelcomePanel::onCreateClick));
   joinButton->Bind(wxEVT_BUTTON, &WelcomePanel::onJoinClick, this);
+
 };
 
 void WelcomePanel::onCreateClick(wxCommandEvent& event) {
@@ -91,6 +92,9 @@ void WelcomePanel::Receive() {
   receiver_port++;
 }
 
-WelcomePanel::~WelcomePanel() {
+//function to add a button in wxWidgets
+void WelcomePanel::AddButton(wxWindow* parent, wxWindowID id,
+
+  WelcomePanel::~WelcomePanel() {
   std::cout << "its working dick heads." << std::endl;
 }
