@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.19.8)
 
 project(shareit)
+
 set(CMAKE_CXX_FLAGS "-lsfml-graphics -lsfml-network -lsfml-window -lsfml-system -lpthread")
 find_package(wxWidgets REQUIRED COMPONENTS net core base)
 include(${wxWidgets_USE_FILE})

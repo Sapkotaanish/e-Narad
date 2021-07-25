@@ -4,16 +4,22 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <thread>
 #include <wx/wx.h>
 
 class Server {
 private:
+  void BroadCast();
   void Listen();
   void Accept();
   void Send();
 
 public:
-  static unsigned int count;
+  struct stats {
+    int current_count, total_count;
+    sf::Uint64 total_size, sent_size;
+  };
+  static stats statistics;
   Server(unsigned int port, wxArrayString files);
   ~Server();
 

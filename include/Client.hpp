@@ -12,11 +12,18 @@ private:
   void Receive();
 
 public:
+  static unsigned int count;
   float percentage_received{ 0 };
   static unsigned int count;
   Client() {};
   Client(unsigned int port);
   ~Client();
+  struct stats {
+  public:
+    int current_count, total_count;
+    sf::Uint64 total_size, received_size;
+  };
+  static stats statistics;
 
 private:
   unsigned int port;
