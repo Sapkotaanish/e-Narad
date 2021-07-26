@@ -92,9 +92,6 @@ void WelcomePanel::Receive() {
   receiver_port++;
 }
 
-//function to add a button in wxWidgets
-void WelcomePanel::AddButton(wxWindow* parent, wxWindowID id,
-
-  WelcomePanel::~WelcomePanel() {
+WelcomePanel::~WelcomePanel() {
   std::cout << "its working dick heads." << std::endl;
 }
