@@ -8,3 +8,4 @@ filetransfer/build/
 .cache/
 Downloads/
 .vscode/
+.cpp.orig
