@@ -9,3 +9,4 @@ filetransfer/build/
 Downloads/
 .vscode/
 *.cpp.orig
+*.hpp.orig
