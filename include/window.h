@@ -4,6 +4,7 @@
 #include <wx/wx.h>
 #include <cstring>
 
+
 class Window : public wxFrame {
 private:
     enum {
@@ -12,7 +13,6 @@ private:
 public:
     Window(const wxString& title);
     void setStatus(wxString status);
-
     wxMenuBar* menubar;
     wxMenu* file;
     wxMenu* help;

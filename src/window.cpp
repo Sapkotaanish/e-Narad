@@ -2,12 +2,12 @@
 #include "window.h"
 #include "welcomePanel.h"
 
+
 Window::Window(const wxString& title) :wxFrame(NULL, wxID_ANY, title) {
     WelcomePanel* welcomePanel = new WelcomePanel(this);
     SetBackgroundColour(wxColor("#D0BFBF"));
     menubar = new wxMenuBar;
     menubar->SetBackgroundColour(wxColor("#3D50C6"));
-    // about = new wxMenu;
     help = new wxMenu;
     ShareBro = new wxMenu;
     help->Append(wxID_ABOUT, wxT("&About"));
@@ -29,8 +29,6 @@ Window::Window(const wxString& title) :wxFrame(NULL, wxID_ANY, title) {
     menubar->Append(ShareBro, wxT("&ShareBro"));
     menubar->Append(file, wxT("&File"));
     menubar->Append(help, wxT("&Help"));
-    // menubar->Append(about, wxT("&About"));
-
     Connect(wxID_EXIT, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(Window::OnQuit));
     Connect(wxEVT_CLOSE_WINDOW, wxCloseEventHandler(Window::OnClose));
     Connect(wxID_ABOUT, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler(Window::OnAbout));

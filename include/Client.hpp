@@ -8,23 +8,25 @@
 
 class Client {
 private:
-  void Connect();
-  void Receive();
+    void Connect();
+    void Receive();
 
 public:
-  float percentage_received{ 0 };
-  Client() {};
-  Client(unsigned int port);
-  ~Client();
-  struct stats {
-  public:
-    int current_count, total_count;
-    sf::Uint64 total_size, received_size;
-  };
-  static stats statistics;
+    float percentage_received{ 0 };
+    Client() {};
+    Client(unsigned int port);
+    ~Client();
+    struct stats {
+    public:
+        int current_count, total_count;
+        sf::Uint64 total_size, received_size;
+    };
+    static stats statistics;
 
 private:
-  unsigned int port;
-  sf::TcpSocket socket;
-  sf::IpAddress ip;
+    unsigned int port;
+    sf::TcpSocket socket;
+    sf::IpAddress ip;
+    int percentage{ 0 };
+
 };
