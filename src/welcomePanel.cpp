@@ -68,19 +68,25 @@ void WelcomePanel::onJoinClick(wxCommandEvent &event) {
 };
 
 void WelcomePanel::Send() {
+  std::mutex m;
+  m.lock();
   sending = true;
   if (!server.initialized)
     server.Initialize(sender_port);
   server.Send(files);
   sending = false;
+  m.unlock();
 }
 
 void WelcomePanel::Receive() {
+  std::mutex m;
+  m.lock();
   receiving = true;
   if (!client.initialized)
     client.Initialize(receiver_port);
   client.Receive();
   receiving = false;
+  m.unlock();
 }
 
 WelcomePanel::~WelcomePanel() {
