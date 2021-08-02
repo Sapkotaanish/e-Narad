@@ -17,7 +17,6 @@ WelcomePanel::WelcomePanel(Window *window)
   sending = false;
   pSizer->AddStretchSpacer(1);
   pSizer->Add(createButton, 0, wxALIGN_CENTER);
-  pSizer->AddSpacer((10, 10));
   pSizer->Add(joinButton, 0, wxALIGN_CENTER);
   pSizer->AddStretchSpacer(1);
 
@@ -70,14 +69,16 @@ void WelcomePanel::onJoinClick(wxCommandEvent &event) {
 
 void WelcomePanel::Send() {
   sending = true;
-  server.Initialize(sender_port);
+  if (!server.initialized)
+    server.Initialize(sender_port);
   server.Send(files);
   sending = false;
 }
 
 void WelcomePanel::Receive() {
   receiving = true;
-  client.Initialize(receiver_port);
+  if (!client.initialized)
+    client.Initialize(receiver_port);
   client.Receive();
   receiving = false;
 }

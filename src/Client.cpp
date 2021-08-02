@@ -20,7 +20,7 @@ void Client::ReceiveBroadcast() {
   }
   std::string result;
   packet >> result;
-  std::cout <<  result << std::endl;
+  std::cout << result << std::endl;
   ip = result;
 }
 
@@ -45,7 +45,9 @@ void Client::Receive() {
   sf::Uint8 file_count;
   packet >> file_count;
   statistics.total_count = file_count;
-  std::cout << "File count in client: " << (int)file_count << std::endl;
+  std::string ack = "received";
+  packet << ack;
+  socket.send(packet);
   for (int i = 0; i < file_count; i++) {
     statistics.current_count = i + 1;
     std::cout << statistics.current_count << std::endl;

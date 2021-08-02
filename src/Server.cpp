@@ -58,6 +58,8 @@ void Server::Send(wxArrayString files) {
   client.send(packet);
   int count = 0;
 
+  // acknowledgement
+  client.receive(packet);
   for (auto i : files) {
     std::ifstream i_file(i, std::ios::ate | std::ios::binary);
     if (!i_file.is_open()) {
