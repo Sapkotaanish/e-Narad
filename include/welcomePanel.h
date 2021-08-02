@@ -8,28 +8,28 @@
 #include <wx/wx.h>
 
 enum {
-  create_button,
-  join_button,
+    create_button,
+    join_button,
 };
 
 class WelcomePanel : public wxPanel {
 private:
-  wxArrayString files;
-  std::thread t;
-  void Send();
-  void Receive();
-  bool initialized;
-  bool sending, receiving;
-  unsigned int sender_port, receiver_port;
-  Server server;
-  Client client;
+    wxArrayString files;
+    std::thread t;
+    void Send();
+    void Receive();
+    bool initialized;
+    bool sending, receiving;
+    unsigned int sender_port, receiver_port;
+    Server server;
+    Client client;
 
 public:
-  WelcomePanel(Window *window);
-  WelcomePanel();
-  Window *currentWindow;
-  void onCreateClick(wxCommandEvent &event);
-  void onJoinClick(wxCommandEvent &event);
+    WelcomePanel(Window *window);
+    WelcomePanel();
+    Window *currentWindow;
+    void onCreateClick(wxCommandEvent &event);
+    void onJoinClick(wxCommandEvent &event);
 
-  ~WelcomePanel();
+    ~WelcomePanel();
 };
