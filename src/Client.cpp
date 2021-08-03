@@ -89,7 +89,8 @@ void Client::Receive() {
         statistics.received_size = 0;
         outfile.close();
     }
-    packet << "acknowledgement of Completion.";
+    sf::Packet acknowledgement;
+    acknowledgement << "acknowledgement of Completion.";
     socket.send(packet);
 }
 Client::~Client() { socket.disconnect(); }

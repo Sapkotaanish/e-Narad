@@ -56,8 +56,6 @@ void Server::Send(wxArrayString files) {
     Server::statistics.total_count = file_count;
     client.send(packet);
     int count = 0;
-
-    // acknowledgement
     client.receive(packet);
     for (auto i : files) {
         std::ifstream i_file(i, std::ios::ate | std::ios::binary);
@@ -92,9 +90,6 @@ void Server::Send(wxArrayString files) {
         i_file.close();
     }
     client.receive(packet);
-    std::string s;
-    packet >> s;
-    std::cout << s << std::endl;
 }
 
 Server::~Server() {
