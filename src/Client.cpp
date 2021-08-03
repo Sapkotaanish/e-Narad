@@ -88,7 +88,7 @@ void Client::Receive() {
         }
         statistics.received_size = 0;
         outfile.close();
-        packet << "Completed.";
+        packet << "acknowledgement of Completion.";
         socket.send(packet);
     }
 }

@@ -21,7 +21,6 @@ void Server::BroadCast() {
     packet << sf::IpAddress::getLocalAddress().toString();
     int count = 0;
     while (!client_connected) {
-        std::cout << ++count << " ";
         socket.send(packet, address, broadcasting_port);
     }
 }
@@ -91,10 +90,11 @@ void Server::Send(wxArrayString files) {
         }
         statistics.sent_size = 0;
         i_file.close();
-        client.receive(packet);
-        std::string s;
-        packet >> s;
     }
+    client.receive(packet);
+    std::string s;
+    packet >> s;
+    std::cout << s << std::endl;
 }
 
 Server::~Server() {
