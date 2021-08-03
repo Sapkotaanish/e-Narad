@@ -2,22 +2,22 @@
 #include <iostream>
 #include <wx/wx.h>
 
-WelcomePanel::WelcomePanel(Window* window)
-  : wxPanel(window, wxID_ANY, wxDefaultPosition, wxSize(200, 800)),
-  initialized(false) {
+WelcomePanel::WelcomePanel(Window *window)
+    : wxPanel(window, wxID_ANY, wxDefaultPosition, wxSize(200, 800)),
+      initialized(false) {
 
   currentWindow = window;
 
-  wxButton* createButton = new wxButton(this, create_button, "Send",
-    wxDefaultPosition, wxSize(150, 40));
-  wxButton* joinButton = new wxButton(this, join_button, "Receive",
-    wxDefaultPosition, wxSize(150, 40));
+  wxButton *createButton = new wxButton(this, create_button, "Send",
+                                        wxDefaultPosition, wxSize(150, 40));
+  wxButton *joinButton = new wxButton(this, join_button, "Receive",
+                                      wxDefaultPosition, wxSize(150, 40));
 
-  wxBoxSizer* pSizer = new wxBoxSizer(wxVERTICAL);
+  wxBoxSizer *pSizer = new wxBoxSizer(wxVERTICAL);
   sending = false;
   pSizer->AddStretchSpacer(1);
   pSizer->Add(createButton, 0, wxALIGN_CENTER);
-  // pSizer->AddSpacer((10, 10));
+  pSizer->AddSpacer((10, 10));
   pSizer->Add(joinButton, 0, wxALIGN_CENTER);
   pSizer->AddStretchSpacer(1);
 
@@ -26,24 +26,21 @@ WelcomePanel::WelcomePanel(Window* window)
 
   // opens file dialog on click
   Connect(create_button, wxEVT_COMMAND_BUTTON_CLICKED,
-    wxCommandEventHandler(WelcomePanel::onCreateClick));
+          wxCommandEventHandler(WelcomePanel::onCreateClick));
   joinButton->Bind(wxEVT_BUTTON, &WelcomePanel::onJoinClick, this);
 };
 
-void WelcomePanel::onCreateClick(wxCommandEvent& event) {
+void WelcomePanel::onCreateClick(wxCommandEvent &event) {
 
   if (!initialized) {
-    std::mutex m;
-    m.lock();
     sender_port = 50000;
     receiver_port = 48000;
     initialized = true;
-    m.unlock();
   }
 
   if (!sending) {
-    wxFileDialog* openFileDialog =
-      new wxFileDialog(this, "", "", "", "", wxFD_MULTIPLE | wxFD_PREVIEW);
+        wxFileDialog *openFileDialog = new wxFileDialog(
+            this, "", "", "", "", wxFD_MULTIPLE | wxFD_PREVIEW);
     if (openFileDialog->ShowModal() == wxID_OK) {
       openFileDialog->GetPaths(files);
       std::thread thr(&WelcomePanel::Send, this);
@@ -51,12 +48,13 @@ void WelcomePanel::onCreateClick(wxCommandEvent& event) {
     }
   }
   else {
-    std::cout << "sending already" << std::endl;
+        wxMessageBox("Please wait for the transfer of previous file.", "",
+                     wxICON_ERROR);
   }
 };
 
-void WelcomePanel::onJoinClick(wxCommandEvent& event) {
-  currentWindow->setStatus(wxString("Receive"));
+void WelcomePanel::onJoinClick(wxCommandEvent &event) {
+    currentWindow->setStatus("Receiving...");
   if (!initialized) {
     sender_port = 48000;
     receiver_port = 50000;
@@ -67,22 +65,31 @@ void WelcomePanel::onJoinClick(wxCommandEvent& event) {
     thr.detach();
   }
   else {
-    std::cout << "Receiving already" << std::endl;
+        wxMessageBox("Please wait, you are already receiving files.", "",
+                     wxICON_ERROR);
   }
 };
 
 void WelcomePanel::Send() {
+    std::mutex m;
+    m.lock();
   sending = true;
-  Server server(sender_port, files);
+    if (!server.initialized)
+        server.Initialize(sender_port);
+    server.Send(files);
   sending = false;
-  sender_port++;
+    m.unlock();
 }
 
 void WelcomePanel::Receive() {
+    std::mutex m;
+    m.lock();
   receiving = true;
-  Client client(receiver_port);
+    if (!client.initialized)
+        client.Initialize(receiver_port);
+    client.Receive();
   receiving = false;
-  receiver_port++;
+    m.unlock();
 }
 
 WelcomePanel::~WelcomePanel() {
