@@ -4,9 +4,6 @@ cmake_install.cmake
 .vscode/
 Makefile
 CMakeCache.txt
-filetransfer/build/
 .cache/
-Downloads/
-.vscode/
 *.cpp.orig
 *.hpp.orig
