@@ -1,6 +1,6 @@
 #include "../include/Server.hpp"
 #include <thread>
-Server::Server() : client_connected(false) { initialized = false; }
+Server::Server() : client_connected(false), initialized(false) {}
 
 void Server::Initialize(unsigned int l_port) {
     port = l_port;
@@ -36,6 +36,7 @@ void Server::Listen() {
 }
 
 void Server::Accept() {
+    std::cout << "In accept function. " << std::endl;
     if (listener.accept(client) != sf::Socket::Done) {
         listener.close();
         std::cout << "Error while accepting." << std::endl;
@@ -56,30 +57,26 @@ void Server::Send(wxArrayString files) {
     Server::statistics.total_count = file_count;
     client.send(packet);
     int count = 0;
-    client.receive(packet);
+    // client.receive(packet);
     for (auto i : files) {
         std::ifstream i_file(i, std::ios::ate | std::ios::binary);
         if (!i_file.is_open()) {
-            std::cout << "Error opening file" << std::endl;
+            std::cout << "Error opening file while reading" << std::endl;
             listener.close();
             exit(1);
         }
         Server::statistics.current_count = ++count;
         sf::Packet packet;
         std::size_t size = i_file.seekg(0, std::ios::end).tellg();
-        std::cout << "Size: " << size << std::endl;
-        std::size_t sendable_size = size;
-        Server::statistics.total_size = (sf::Uint64)sendable_size;
+        Server::statistics.total_size = (sf::Uint64)size;
         packet << static_cast<std::string>(i);
-        packet << (sf::Uint64)sendable_size;
+        packet << (sf::Uint64)size;
         client.send(packet);
-        const size_t packet_size =
-            sendable_size < 10000 ? sendable_size : 10000;
-        std::cout << "Packet size in server: " << packet_size << std::endl;
+        const size_t packet_size = size < 10000 ? size : 10000;
         char data[packet_size];
         i_file.seekg(0, std::ios::beg);
         size_t sent_size = 0;
-
+        std::cout << "Sending " << size << " " << i << std::endl;
         while (!i_file.eof()) {
             i_file.read(data, packet_size);
             client.send(data, packet_size);
@@ -88,6 +85,7 @@ void Server::Send(wxArrayString files) {
         }
         statistics.sent_size = 0;
         i_file.close();
+        std::cout << "Sent: " << i << std::endl;
     }
     client.receive(packet);
 }

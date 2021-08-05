@@ -1,20 +1,23 @@
 #include "../include/Client.hpp"
+using std::cout;
+using std::endl;
+
 Client::Client() {
     system("mkdir -p ~/Downloads/e-Narad");
     initialized = false;
 }
 
 void Client::ReceiveBroadcast() {
-    sf::UdpSocket socket;
+    sf::UdpSocket udp_socket;
     unsigned short broadcasting_port = 52000;
     sf::IpAddress address = sf::IpAddress::Broadcast;
-    if (socket.bind(broadcasting_port) != sf::Socket::Done) {
+    if (udp_socket.bind(broadcasting_port) != sf::Socket::Done) {
         std::cout << "Couldnot bind the socket. " << std::endl;
         exit(1);
     }
     sf::Packet packet;
-    std::cout << "started_receiving" << std::endl;
-    if (socket.receive(packet, address, broadcasting_port) !=
+    cout << "started_receiving_for_broadcast" << endl;
+    if (udp_socket.receive(packet, address, broadcasting_port) !=
         sf::Socket::Done) {
         std::cout << "Error while broadcasting" << std::endl;
         exit(1);
@@ -59,12 +62,10 @@ void Client::Receive() {
         socket.receive(packet);
         std::string file_name;
         packet >> file_name >> size;
-        std::cout << "Size in client: " << size << std::endl;
         std::size_t size_of_file = (std::size_t)size;
         const sf::Uint64 packet_size =
             size_of_file < 10000 ? size_of_file : 10000;
         statistics.total_size = size_of_file;
-        std::cout << "Packet size in client: " << packet_size << std::endl;
         char data[packet_size];
         std::size_t received_size = 0;
         const size_t last_slash_idx = file_name.find_last_of("/");
@@ -73,7 +74,8 @@ void Client::Receive() {
         }
         file_name.insert(0, static_cast<std::string>(home_dir) +
                                 "/Downloads/e-Narad/");
-        std::cout << file_name << std::endl;
+        std::cout << "Receiving: " << file_name << " with size " << size
+                  << std::endl;
         std::fstream outfile(file_name, std::ios::out | std::ios::binary);
         if (!outfile.is_open()) {
             std::cout << "File cannot be opened" << std::endl;
@@ -87,6 +89,7 @@ void Client::Receive() {
             statistics.received_size = received_size;
         }
         statistics.received_size = 0;
+        std::cout << "Received " << file_name << std::endl;
         outfile.close();
     }
     sf::Packet acknowledgement;
