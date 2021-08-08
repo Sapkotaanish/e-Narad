@@ -1,6 +1,8 @@
 #include "../include/Server.hpp"
 #include <thread>
-Server::Server() : client_connected(false), initialized(false) {}
+Server::Server() : client_connected(false), initialized(false) {
+    client.setBlocking(true);
+}
 
 void Server::Initialize(unsigned int l_port) {
     port = l_port;
@@ -52,14 +54,16 @@ void Server::Accept() {
 }
 
 void Server::Send(wxArrayString files) {
-    sf::Packet packet;
+    sf::Packet fd_packet;
     sf::Uint8 file_count = files.GetCount();
     std::cout << "File count in server: " << (int)file_count << std::endl;
-    packet << file_count;
+    fd_packet << file_count;
     Server::statistics.total_count = file_count;
-    client.send(packet);
+    sf::sleep(sf::seconds(1));
+    client.send(fd_packet);
+    sf::Packet ack_p;
+    client.receive(ack_p);
     int count = 0;
-    // client.receive(packet);
     for (auto i : files) {
         std::ifstream i_file(i, std::ios::ate | std::ios::binary);
         if (!i_file.is_open()) {
@@ -68,13 +72,14 @@ void Server::Send(wxArrayString files) {
             exit(1);
         }
         Server::statistics.current_count = ++count;
-        sf::Packet packet;
+        sf::Packet file_data_packet;
         std::size_t size = i_file.seekg(0, std::ios::end).tellg();
         Server::statistics.total_size = (sf::Uint64)size;
-        packet << static_cast<std::string>(i);
-        packet << (sf::Uint64)size;
-        client.send(packet);
-        const size_t packet_size = size < 10000 ? size : 10000;
+        file_data_packet << static_cast<std::string>(i);
+        file_data_packet << (sf::Uint64)size;
+        sf::sleep(sf::seconds(2));
+        client.send(file_data_packet);
+        const size_t packet_size = size < 1000 ? size : 1000;
         char data[packet_size];
         i_file.seekg(0, std::ios::beg);
         size_t sent_size = 0;
@@ -88,8 +93,9 @@ void Server::Send(wxArrayString files) {
         statistics.sent_size = 0;
         i_file.close();
         std::cout << "Sent: " << i << std::endl;
+        sf::Packet ack;
+        client.receive(ack);
     }
-    client.receive(packet);
 }
 
 Server::~Server() {
