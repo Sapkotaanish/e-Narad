@@ -52,12 +52,12 @@ void Server::Accept() {
 }
 
 void Server::Send(wxArrayString files) {
+    sf::sleep(sf::seconds(1));
     sf::Packet fd_packet;
     sf::Uint8 file_count = files.GetCount();
     std::cout << "File count in server: " << (int)file_count << std::endl;
     fd_packet << file_count;
     Server::statistics.total_count = file_count;
-    sf::sleep(sf::seconds(1));
     client.send(fd_packet);
     sf::Packet ack_p;
     client.receive(ack_p);
