@@ -6,9 +6,8 @@ Server::Server() : client_connected(false), initialized(false) {
     client.setBlocking(true);
 }
 
-void Server::Initialize(unsigned int l_port, Window* thisWindow) {
+void Server::Initialize(unsigned int l_port) {
     port = l_port;
-    currentWindow = thisWindow;
     std::thread t(&Server::BroadCast, this);
     Listen();
     Accept();

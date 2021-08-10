@@ -6,7 +6,6 @@
 #include <string>
 #include <thread>
 #include <wx/wx.h>
-#include <window.h>
 
 struct server_stats {
     int current_count, total_count;
@@ -23,9 +22,8 @@ private:
 public:
     server_stats statistics;
     bool initialized;
-    Window* currentWindow;
     void Send(wxArrayString files, int& stats);
-    void Initialize(unsigned int port, Window* thisWindow);
+    void Initialize(unsigned int port);
     Server();
     ~Server();
 

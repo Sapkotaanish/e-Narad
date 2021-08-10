@@ -91,7 +91,7 @@ void WelcomePanel::Initialize() {
     m.lock();
     sending = true;
     if (!server.initialized)
-        server.Initialize(sender_port, currentWindow);
+        server.Initialize(sender_port);
     m.unlock();
 }
 
