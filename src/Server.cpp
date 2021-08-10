@@ -1,6 +1,6 @@
 #include "../include/Server.hpp"
-#include <thread>
 #include "wx/progdlg.h"
+#include <thread>
 
 Server::Server() : client_connected(false), initialized(false) {
     client.setBlocking(true);
@@ -34,8 +34,7 @@ void Server::Listen() {
         std::cout << "Error While Listening. " << std::endl;
         listener.close();
         exit(1);
-    }
-    else {
+    } else {
         std::cout << "Listened" << std::endl;
     }
 }
@@ -46,16 +45,15 @@ void Server::Accept() {
         listener.close();
         std::cout << "Error while accepting." << std::endl;
         exit(1);
-    }
-    else {
+    } else {
         client_connected = true;
         std::cout << "Connected to receiver with IP "
-            << client.getRemoteAddress() << " .";
+                  << client.getRemoteAddress() << " .";
         std::cout << "My IP " << sf::IpAddress::getLocalAddress() << std::endl;
     }
 }
 
-void Server::Send(wxArrayString files, int& stats) {
+void Server::Send(wxArrayString files, int &stats) {
     sf::sleep(sf::seconds(1));
     sf::Packet fd_packet;
     sf::Uint8 file_count = files.GetCount();
@@ -67,6 +65,9 @@ void Server::Send(wxArrayString files, int& stats) {
     client.receive(ack_p);
     int count = 0;
     for (auto i : files) {
+        if (client.Disconnected){
+            break;
+        }
         std::ifstream i_file(i, std::ios::ate | std::ios::binary);
         if (!i_file.is_open()) {
             std::cout << "Error opening file while reading" << std::endl;
