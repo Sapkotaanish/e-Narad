@@ -1,11 +1,14 @@
 #include "../include/Server.hpp"
 #include <thread>
+#include "wx/progdlg.h"
+
 Server::Server() : client_connected(false), initialized(false) {
     client.setBlocking(true);
 }
 
-void Server::Initialize(unsigned int l_port) {
+void Server::Initialize(unsigned int l_port, Window* thisWindow) {
     port = l_port;
+    currentWindow = thisWindow;
     std::thread t(&Server::BroadCast, this);
     Listen();
     Accept();
@@ -53,7 +56,7 @@ void Server::Accept() {
     }
 }
 
-void Server::Send(wxArrayString files) {
+void Server::Send(wxArrayString files, int &stats) {
     sf::sleep(sf::seconds(1));
     sf::Packet fd_packet;
     sf::Uint8 file_count = files.GetCount();
@@ -92,6 +95,7 @@ void Server::Send(wxArrayString files) {
         }
         statistics.sent_size = 0;
         i_file.close();
+        stats++;
         std::cout << "Sent: " << i << std::endl;
         sf::Packet ack;
         client.receive(ack);

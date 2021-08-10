@@ -16,7 +16,8 @@ class WelcomePanel : public wxPanel {
 private:
     wxArrayString files;
     std::thread t;
-    void Send();
+    void Initialize();
+    void Send(int& stats);
     void Receive();
     bool initialized;
     bool sending, receiving;
@@ -28,6 +29,8 @@ public:
     WelcomePanel(Window *window);
     WelcomePanel();
     Window *currentWindow;
+    bool ready;
+    std::mutex m;
     void onCreateClick(wxCommandEvent &event);
     void onJoinClick(wxCommandEvent &event);
 

@@ -6,6 +6,8 @@
 #include <string>
 #include <thread>
 #include <wx/wx.h>
+#include <window.h>
+
 struct server_stats {
     int current_count, total_count;
     sf::Uint64 total_size, sent_size;
@@ -21,8 +23,9 @@ private:
 public:
     server_stats statistics;
     bool initialized;
-    void Send(wxArrayString files);
-    void Initialize(unsigned int port);
+    Window* currentWindow;
+    void Send(wxArrayString files, int& stats);
+    void Initialize(unsigned int port, Window* thisWindow);
     Server();
     ~Server();
 

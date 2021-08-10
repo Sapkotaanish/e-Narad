@@ -4,6 +4,7 @@ cmake_install.cmake
 .vscode/
 Makefile
 CMakeCache.txt
+sf-eNarad
 .cache/
 *.cpp.orig
 *.hpp.orig

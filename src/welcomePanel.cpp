@@ -43,8 +43,24 @@ void WelcomePanel::onCreateClick(wxCommandEvent& event) {
             this, "", "", "", "", wxFD_MULTIPLE | wxFD_PREVIEW);
         if (openFileDialog->ShowModal() == wxID_OK) {
             openFileDialog->GetPaths(files);
-            std::thread thr(&WelcomePanel::Send, this);
+            std::thread thr(&WelcomePanel::Initialize, this);
             thr.detach();
+            wxProgressDialog dialog(wxT("example"), wxT("asdf"), 5, currentWindow, wxPD_CAN_ABORT);
+            dialog.Update(0, wxT("sadf"));
+            dialog.Resume();
+            int stats = 0;
+            std::thread thr1(&WelcomePanel::Send, this, std::ref(stats));
+            thr1.detach();
+            int i;
+            bool cont = true;
+            for(int i=1; i<=50; i++){
+                wxSleep(1);
+                cont = dialog.Update(stats);
+                // if( !cont ){
+                //     std::cout << "iscont";
+                //     dialog.Resume();
+                // }
+            }
         }
     }
     else {
@@ -52,6 +68,7 @@ void WelcomePanel::onCreateClick(wxCommandEvent& event) {
             wxICON_ERROR);
     }
 };
+
 
 void WelcomePanel::onJoinClick(wxCommandEvent& event) {
     currentWindow->setStatus("Receiving...");
@@ -70,28 +87,32 @@ void WelcomePanel::onJoinClick(wxCommandEvent& event) {
     }
 };
 
-void WelcomePanel::Send() {
-    std::mutex m;
+void WelcomePanel::Initialize() {
     m.lock();
     sending = true;
     if (!server.initialized)
-        server.Initialize(sender_port);
-    server.Send(files);
+        server.Initialize(sender_port, currentWindow);
+    m.unlock();
+}
+
+void WelcomePanel::Send(int& stats){
+    m.lock();
+    server.Send(files, stats);
     sending = false;
     m.unlock();
 }
 
 void WelcomePanel::Receive() {
-    std::mutex m;
-    m.lock();
+    std::mutex mt;
+    mt.lock();
     receiving = true;
     if (!client.initialized)
         client.Initialize(receiver_port);
     client.Receive();
     receiving = false;
-    m.unlock();
+    mt.unlock();
 }
 
 WelcomePanel::~WelcomePanel() {
-    std::cout << "its working dick heads." << std::endl;
+    std::cout << "its working." << std::endl;
 }
