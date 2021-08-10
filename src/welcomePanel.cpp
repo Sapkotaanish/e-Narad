@@ -43,23 +43,31 @@ void WelcomePanel::onCreateClick(wxCommandEvent& event) {
             this, "", "", "", "", wxFD_MULTIPLE | wxFD_PREVIEW);
         if (openFileDialog->ShowModal() == wxID_OK) {
             openFileDialog->GetPaths(files);
+            tc = files.GetCount();
             std::thread thr(&WelcomePanel::Initialize, this);
             thr.detach();
-            wxProgressDialog dialog(wxT("example"), wxT("asdf"), 5, currentWindow, wxPD_CAN_ABORT);
-            dialog.Update(0, wxT("sadf"));
+            wxProgressDialog dialog(wxT("e-Narad"), wxT("asdf"), 5, currentWindow, wxPD_AUTO_HIDE | wxPD_CAN_ABORT | wxPD_APP_MODAL | wxPD_ELAPSED_TIME);
+            dialog.Update(0);
             dialog.Resume();
             int stats = 0;
             std::thread thr1(&WelcomePanel::Send, this, std::ref(stats));
             thr1.detach();
-            int i;
             bool cont = true;
-            for(int i=1; i<=50; i++){
-                wxSleep(1);
-                cont = dialog.Update(stats);
-                // if( !cont ){
-                //     std::cout << "iscont";
-                //     dialog.Resume();
-                // }
+            std::cout << "Total file count in wP: " << tc << std::endl;
+            while (stats != tc) {
+                cont = dialog.Update(stats, wxString("Sending " + stats / tc));
+                if (!cont)
+                {
+                    if (wxMessageBox(wxT("Do you really want to cancel ? "),
+                        wxT("e-Narad"),
+                        wxYES_NO | wxICON_QUESTION) == wxYES) {
+                        server.client.disconnect();
+                        server.listener.close();
+                        wxLogStatus("Disconnected");
+                        break;
+                    }
+                    dialog.Resume();
+                }
             }
         }
     }
@@ -95,7 +103,7 @@ void WelcomePanel::Initialize() {
     m.unlock();
 }
 
-void WelcomePanel::Send(int& stats){
+void WelcomePanel::Send(int& stats) {
     m.lock();
     server.Send(files, stats);
     sending = false;
