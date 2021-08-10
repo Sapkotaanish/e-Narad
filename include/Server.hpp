@@ -6,6 +6,7 @@
 #include <string>
 #include <thread>
 #include <wx/wx.h>
+
 struct server_stats {
     int current_count, total_count;
     sf::Uint64 total_size, sent_size;
@@ -21,14 +22,16 @@ private:
 public:
     server_stats statistics;
     bool initialized;
-    void Send(wxArrayString files);
+    void Send(wxArrayString files, int& stats);
     void Initialize(unsigned int port);
+    sf::TcpListener listener;
+    sf::TcpSocket client;
+
+    bool keepSending{ true };
     Server();
     ~Server();
 
 private:
     unsigned int port;
-    sf::TcpListener listener;
-    sf::TcpSocket client;
     bool client_connected;
 };

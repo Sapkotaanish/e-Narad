@@ -48,55 +48,61 @@ void Client::Receive() {
     while (true) {
         sf::Packet fd_packet;
         socket.receive(fd_packet);
-        sf::Uint8 file_count;
+    sf::Uint8 file_count;
         fd_packet >> file_count;
-        statistics.total_count = file_count;
+    statistics.total_count = file_count;
         sf::Packet ack_packet;
-        std::string ack = "received";
+    std::string ack = "received";
         ack_packet << ack;
         socket.send(ack_packet);
-        for (int i = 0; i < file_count; i++) {
-            statistics.current_count = i + 1;
-            std::cout << statistics.current_count << std::endl;
-            struct stat buf;
-            sf::Uint64 size;
-            sf::Packet fn_packet;
-            std::size_t byte_received;
-            socket.receive(fn_packet);
-            std::string file_name;
-            fn_packet >> file_name >> size;
-            std::size_t size_of_file = (std::size_t)size;
-            const sf::Uint64 packet_size =
-                size_of_file < 1000 ? size_of_file : 1000;
-            statistics.total_size = size_of_file;
-            char data[packet_size];
-            std::size_t received_size = 0;
-            const size_t last_slash_idx = file_name.find_last_of("/");
-            if (std::string::npos != last_slash_idx) {
-                file_name.erase(0, last_slash_idx + 1);
-            }
-            file_name.insert(0, static_cast<std::string>(home_dir) +
-                                    "/Downloads/e-Narad/");
-            std::cout << "Receiving: " << file_name << " with size " << size
-                      << std::endl;
-            std::fstream outfile(file_name, std::ios::out | std::ios::binary);
-            if (!outfile.is_open()) {
-                std::cout << "File cannot be opened" << std::endl;
-                exit(1);
-            }
+    for (int i = 0; i < file_count; i++) {
+            if (keepReceiving) {
+        statistics.current_count = i + 1;
+        std::cout << statistics.current_count << std::endl;
+        struct stat buf;
+        sf::Uint64 size;
+                sf::Packet fn_packet;
+        std::size_t byte_received;
+                socket.receive(fn_packet);
+        std::string file_name;
+                fn_packet >> file_name >> size;
+        std::size_t size_of_file = (std::size_t)size;
+        const sf::Uint64 packet_size =
+                    size_of_file < 1000 ? size_of_file : 1000;
+        statistics.total_size = size_of_file;
+        char data[packet_size];
+        std::size_t received_size = 0;
+        const size_t last_slash_idx = file_name.find_last_of("/");
+        if (std::string::npos != last_slash_idx) {
+            file_name.erase(0, last_slash_idx + 1);
+        }
+        file_name.insert(0, static_cast<std::string>(home_dir) +
+                                "/Downloads/e-Narad/");
+                std::cout << "Receiving: " << file_name << " with size " << size
+                    << std::endl;
+        std::fstream outfile(file_name, std::ios::out | std::ios::binary);
+        if (!outfile.is_open()) {
+            std::cout << "File cannot be opened" << std::endl;
+            exit(1);
+        }
 
-            while (received_size < size_of_file) {
-                socket.receive(data, packet_size, byte_received);
-                outfile.write(data, packet_size);
-                received_size += byte_received;
-                statistics.received_size = received_size;
+        while (received_size < size_of_file) {
+            socket.receive(data, packet_size, byte_received);
+            outfile.write(data, packet_size);
+            received_size += byte_received;
+            statistics.received_size = received_size;
+        }
+        statistics.received_size = 0;
+                std::cout << "Received " << file_name << std::endl;
+        outfile.close();
+    sf::Packet acknowledgement;
+    acknowledgement << "acknowledgement of Completion.";
+                socket.send(acknowledgement);
             }
-            statistics.received_size = 0;
-            std::cout << "Received " << file_name << std::endl;
-            outfile.close();
-            sf::Packet acknowledgement;
-            acknowledgement << "acknowledgement of Completion.";
-            socket.send(acknowledgement);
+            else {
+                std::cout << "Receiving cancelled" << std::endl;
+                break;
+            }
         }
     }
 }

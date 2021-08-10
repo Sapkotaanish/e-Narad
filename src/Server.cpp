@@ -1,5 +1,7 @@
 #include "../include/Server.hpp"
+#include "wx/progdlg.h"
 #include <thread>
+
 Server::Server() : client_connected(false), initialized(false) {
     client.setBlocking(true);
 }
@@ -32,7 +34,8 @@ void Server::Listen() {
         std::cout << "Error While Listening. " << std::endl;
         listener.close();
         exit(1);
-    } else {
+    }
+    else {
         std::cout << "Listened" << std::endl;
     }
 }
@@ -43,7 +46,8 @@ void Server::Accept() {
         listener.close();
         std::cout << "Error while accepting." << std::endl;
         exit(1);
-    } else {
+    }
+    else {
         client_connected = true;
         std::cout << "Connected to receiver with IP "
                   << client.getRemoteAddress() << " .";
@@ -51,7 +55,7 @@ void Server::Accept() {
     }
 }
 
-void Server::Send(wxArrayString files) {
+void Server::Send(wxArrayString files, int& stats) {
     sf::sleep(sf::seconds(1));
     sf::Packet fd_packet;
     sf::Uint8 file_count = files.GetCount();
@@ -63,36 +67,44 @@ void Server::Send(wxArrayString files) {
     client.receive(ack_p);
     int count = 0;
     for (auto i : files) {
+        if (keepSending) {
         std::ifstream i_file(i, std::ios::ate | std::ios::binary);
         if (!i_file.is_open()) {
-            std::cout << "Error opening file while reading" << std::endl;
+                std::cout << "Error opening file while reading" << std::endl;
             listener.close();
             exit(1);
         }
         Server::statistics.current_count = ++count;
-        sf::Packet file_data_packet;
+            sf::Packet file_data_packet;
         std::size_t size = i_file.seekg(0, std::ios::end).tellg();
-        Server::statistics.total_size = (sf::Uint64)size;
-        file_data_packet << static_cast<std::string>(i);
-        file_data_packet << (sf::Uint64)size;
-        sf::sleep(sf::seconds(2));
-        client.send(file_data_packet);
-        const size_t packet_size = size < 1000 ? size : 1000;
+            Server::statistics.total_size = (sf::Uint64)size;
+            file_data_packet << static_cast<std::string>(i);
+            file_data_packet << (sf::Uint64)size;
+            sf::sleep(sf::seconds(1.5));
+            client.send(file_data_packet);
+            const size_t packet_size = size < 1000 ? size : 1000;
         char data[packet_size];
         i_file.seekg(0, std::ios::beg);
         size_t sent_size = 0;
-        std::cout << "Sending " << size << " " << i << std::endl;
+            std::cout << "Sending " << size << " " << i << std::endl;
         while (!i_file.eof()) {
             i_file.read(data, packet_size);
             client.send(data, packet_size);
             sent_size += packet_size;
             Server::statistics.sent_size = sent_size;
+                std::cout << sent_size << std::endl;
         }
         statistics.sent_size = 0;
         i_file.close();
-        std::cout << "Sent: " << i << std::endl;
-        sf::Packet ack;
-        client.receive(ack);
+            stats++;
+            std::cout << "Sent: " << i << std::endl;
+            sf::Packet ack;
+            client.receive(ack);
+    }
+        else {
+            std::cout << "Sending cancelled" << std::endl;
+            break;
+        }
     }
 }
 
