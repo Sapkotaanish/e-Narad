@@ -24,15 +24,16 @@ private:
     unsigned int sender_port, receiver_port;
     Server server;
     Client client;
+    int tc{ 0 };
 
 public:
-    WelcomePanel(Window *window);
+    WelcomePanel(Window* window);
     WelcomePanel();
-    Window *currentWindow;
+    Window* currentWindow;
     bool ready;
     std::mutex m;
-    void onCreateClick(wxCommandEvent &event);
-    void onJoinClick(wxCommandEvent &event);
+    void onCreateClick(wxCommandEvent& event);
+    void onJoinClick(wxCommandEvent& event);
 
     ~WelcomePanel();
 };

@@ -55,7 +55,7 @@ void Server::Accept() {
     }
 }
 
-void Server::Send(wxArrayString files, int &stats) {
+void Server::Send(wxArrayString files, int& stats) {
     sf::sleep(sf::seconds(1));
     sf::Packet fd_packet;
     sf::Uint8 file_count = files.GetCount();
@@ -79,7 +79,7 @@ void Server::Send(wxArrayString files, int &stats) {
         Server::statistics.total_size = (sf::Uint64)size;
         file_data_packet << static_cast<std::string>(i);
         file_data_packet << (sf::Uint64)size;
-        sf::sleep(sf::seconds(2));
+        sf::sleep(sf::seconds(1.5));
         client.send(file_data_packet);
         const size_t packet_size = size < 1000 ? size : 1000;
         char data[packet_size];

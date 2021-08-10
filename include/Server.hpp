@@ -24,12 +24,14 @@ public:
     bool initialized;
     void Send(wxArrayString files, int& stats);
     void Initialize(unsigned int port);
+    sf::TcpListener listener;
+    sf::TcpSocket client;
+
+
     Server();
     ~Server();
 
 private:
     unsigned int port;
-    sf::TcpListener listener;
-    sf::TcpSocket client;
     bool client_connected;
 };
