@@ -2,18 +2,18 @@
 #include <iostream>
 #include <wx/wx.h>
 
-WelcomePanel::WelcomePanel(Window* window)
+WelcomePanel::WelcomePanel(Window *window)
     : wxPanel(window, wxID_ANY, wxDefaultPosition, wxSize(200, 800)),
-    initialized(false) {
+      initialized(false) {
 
     currentWindow = window;
 
-    wxButton* createButton = new wxButton(this, create_button, "Send",
-        wxDefaultPosition, wxSize(150, 40));
-    wxButton* joinButton = new wxButton(this, join_button, "Receive",
-        wxDefaultPosition, wxSize(150, 40));
+    wxButton *createButton = new wxButton(this, create_button, "Send",
+                                          wxDefaultPosition, wxSize(150, 40));
+    wxButton *joinButton = new wxButton(this, join_button, "Receive",
+                                        wxDefaultPosition, wxSize(150, 40));
 
-    wxBoxSizer* pSizer = new wxBoxSizer(wxVERTICAL);
+    wxBoxSizer *pSizer = new wxBoxSizer(wxVERTICAL);
     sending = false;
     pSizer->AddStretchSpacer(1);
     pSizer->Add(createButton, 0, wxALIGN_CENTER);
@@ -26,11 +26,11 @@ WelcomePanel::WelcomePanel(Window* window)
 
     // opens file dialog on click
     Connect(create_button, wxEVT_COMMAND_BUTTON_CLICKED,
-        wxCommandEventHandler(WelcomePanel::onCreateClick));
+            wxCommandEventHandler(WelcomePanel::onCreateClick));
     joinButton->Bind(wxEVT_BUTTON, &WelcomePanel::onJoinClick, this);
 };
 
-void WelcomePanel::onCreateClick(wxCommandEvent& event) {
+void WelcomePanel::onCreateClick(wxCommandEvent &event) {
 
     if (!initialized) {
         sender_port = 50000;
@@ -39,14 +39,17 @@ void WelcomePanel::onCreateClick(wxCommandEvent& event) {
     }
 
     if (!sending) {
-        wxFileDialog* openFileDialog = new wxFileDialog(
+        wxFileDialog *openFileDialog = new wxFileDialog(
             this, "", "", "", "", wxFD_MULTIPLE | wxFD_PREVIEW);
         if (openFileDialog->ShowModal() == wxID_OK) {
             openFileDialog->GetPaths(files);
             tc = files.GetCount();
             std::thread thr(&WelcomePanel::Initialize, this);
             thr.detach();
-            wxProgressDialog dialog(wxT("e-Narad"), wxT("asdf"), 5, currentWindow, wxPD_AUTO_HIDE | wxPD_CAN_ABORT | wxPD_APP_MODAL | wxPD_ELAPSED_TIME);
+            wxProgressDialog dialog(wxT("e-Narad"), wxT("asdf"), tc,
+                                    currentWindow,
+                                    wxPD_AUTO_HIDE | wxPD_CAN_ABORT |
+                                        wxPD_APP_MODAL | wxPD_ELAPSED_TIME);
             dialog.Update(0);
             dialog.Resume();
             int stats = 0;
@@ -55,12 +58,11 @@ void WelcomePanel::onCreateClick(wxCommandEvent& event) {
             bool cont = true;
             std::cout << "Total file count in wP: " << tc << std::endl;
             while (stats != tc) {
-                cont = dialog.Update(stats, wxString("Sending " + stats / tc));
-                if (!cont)
-                {
+                cont = dialog.Update(stats, wxString(&"Sending " [ stats / tc]));
+                if (!cont) {
                     if (wxMessageBox(wxT("Do you really want to cancel ? "),
-                        wxT("e-Narad"),
-                        wxYES_NO | wxICON_QUESTION) == wxYES) {
+                                     wxT("e-Narad"),
+                                     wxYES_NO | wxICON_QUESTION) == wxYES) {
                         server.client.disconnect();
                         server.listener.close();
                         wxLogStatus("Disconnected");
@@ -70,15 +72,13 @@ void WelcomePanel::onCreateClick(wxCommandEvent& event) {
                 }
             }
         }
-    }
-    else {
+    } else {
         wxMessageBox("Please wait for the transfer of previous file.", "",
-            wxICON_ERROR);
+                     wxICON_ERROR);
     }
 };
 
-
-void WelcomePanel::onJoinClick(wxCommandEvent& event) {
+void WelcomePanel::onJoinClick(wxCommandEvent &event) {
     currentWindow->setStatus("Receiving...");
     if (!initialized) {
         sender_port = 48000;
@@ -88,10 +88,9 @@ void WelcomePanel::onJoinClick(wxCommandEvent& event) {
     if (!receiving) {
         std::thread thr(&WelcomePanel::Receive, this);
         thr.detach();
-    }
-    else {
+    } else {
         wxMessageBox("Please wait, you are already receiving files.", "",
-            wxICON_ERROR);
+                     wxICON_ERROR);
     }
 };
 
@@ -103,7 +102,7 @@ void WelcomePanel::Initialize() {
     m.unlock();
 }
 
-void WelcomePanel::Send(int& stats) {
+void WelcomePanel::Send(int &stats) {
     m.lock();
     server.Send(files, stats);
     sending = false;
@@ -121,6 +120,4 @@ void WelcomePanel::Receive() {
     mt.unlock();
 }
 
-WelcomePanel::~WelcomePanel() {
-    std::cout << "its working." << std::endl;
-}
+WelcomePanel::~WelcomePanel() { std::cout << "its working." << std::endl; }

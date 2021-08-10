@@ -65,9 +65,6 @@ void Server::Send(wxArrayString files, int &stats) {
     client.receive(ack_p);
     int count = 0;
     for (auto i : files) {
-        if (client.Disconnected){
-            break;
-        }
         std::ifstream i_file(i, std::ios::ate | std::ios::binary);
         if (!i_file.is_open()) {
             std::cout << "Error opening file while reading" << std::endl;
@@ -99,6 +96,10 @@ void Server::Send(wxArrayString files, int &stats) {
         std::cout << "Sent: " << i << std::endl;
         sf::Packet ack;
         client.receive(ack);
+        if (ack.endOfPacket()) {
+            std::cout << "I think client quited the program." << std::endl;
+            break;
+        }
     }
 }
 
