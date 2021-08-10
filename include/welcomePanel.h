@@ -8,8 +8,10 @@
 #include <wx/wx.h>
 
 enum {
-    create_button,
-    join_button,
+    send_button,
+    receive_button,
+    disconnect_button,
+    play_tictactoe
 };
 
 class WelcomePanel : public wxPanel {
@@ -32,8 +34,9 @@ public:
     Window* currentWindow;
     bool ready;
     std::mutex m;
-    void onCreateClick(wxCommandEvent& event);
-    void onJoinClick(wxCommandEvent& event);
-
+    void onSendClick(wxCommandEvent& event);
+    void onReceiveClick(wxCommandEvent& event);
+    void onDisconnectClick(wxCommandEvent& event);
+    void onPlayTicTacToeClick(wxCommandEvent& event);
     ~WelcomePanel();
 };

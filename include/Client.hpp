@@ -25,6 +25,7 @@ public:
     bool initialized;
     void Initialize(unsigned int port);
     void Receive();
+    bool keepReceiving{ true };
 
 private:
     unsigned int port;

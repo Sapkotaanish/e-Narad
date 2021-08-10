@@ -27,7 +27,7 @@ public:
     sf::TcpListener listener;
     sf::TcpSocket client;
 
-
+    bool keepSending{ true };
     Server();
     ~Server();
 
