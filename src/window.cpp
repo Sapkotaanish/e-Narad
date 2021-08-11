@@ -1,7 +1,9 @@
-#include "welcomePanel.h"
 #include "window.h"
+#include "welcomePanel.h"
 
-Window::Window(const wxString& title) : wxFrame(NULL, wxID_ANY, title, wxDefaultPosition, wxSize(600, 600), wxDEFAULT_FRAME_STYLE^ wxRESIZE_BORDER) {
+Window::Window(const wxString &title)
+    : wxFrame(NULL, wxID_ANY, title, wxDefaultPosition, wxSize(600, 600),
+              wxDEFAULT_FRAME_STYLE ^ wxRESIZE_BORDER) {
     WelcomePanel* welcomePanel = new WelcomePanel(this);
     SetBackgroundColour(wxColor("#D0BFBF"));
     menubar = new wxMenuBar;
@@ -43,11 +45,12 @@ void Window::OnQuit(wxCommandEvent& WXUNUSED(event)) { Close(true); }
 
 void Window::OnAbout(wxCommandEvent& WXUNUSED(event)) {
     wxString msg;
-    wxString about = "A simple file transfer app with fast and reliable "
+    wxString about =
+        "A simple file transfer app with fast and reliable "
         "service made using core concepts of OOP in C++ aided by "
         "some popular libraries.\n\nDeveloped by: \n1. Anish "
         "Sapkota \n2. Nabin Khanal \n3. Kushal Subedi \n\n "
-        "Libraries used: \n1. wxWidgets(UI) \n2. SFM(Networking)";
+        "Libraries used: \n1. wxWidgets(UI) \n2. SFML(Networking & Game)"; 
     msg.Printf(about);
 
     wxMessageBox(msg, "About", wxOK | wxICON_INFORMATION);
@@ -73,8 +76,7 @@ void Window::OnClose(wxCloseEvent& event) {
 
     if (ret == wxID_YES) {
         Destroy();
-    }
-    else {
+    } else {
         event.Veto();
     }
 }

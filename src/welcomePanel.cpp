@@ -158,6 +158,7 @@ void WelcomePanel::onPlayTicTacToeClick(wxCommandEvent &event) {
 void WelcomePanel::PlayGame() {
     Board b;
     b.run();
+    wxLogStatus("Tic tac toe quitted.");
     playing_game = false;
 }
 
