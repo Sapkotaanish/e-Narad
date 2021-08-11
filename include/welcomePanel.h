@@ -5,6 +5,7 @@
 #include "wx/progdlg.h"
 #include <mutex>
 #include <thread>
+#include "Board.h"
 #include <wx/wx.h>
 
 enum {

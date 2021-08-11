@@ -1,4 +1,5 @@
 #include "Board.h"
+#include <X11/Xlib.h>
 
 Board::Board() {
     int count = 1;
@@ -36,9 +37,9 @@ Board::Board() {
 
     m_window.create(sf::VideoMode(m_window_width, m_window_height), "TicTacToe",
                     sf::Style::Close | sf::Style::Titlebar, settings);
-    m_window.setPosition(sf::Vector2i(width / 2 - m_window_width / 2,
-                                      height / 2 - m_window_height / 2));
-
+    // m_window.setPosition(sf::Vector2i(width / 2 - m_window_width / 2,
+    //                                   height / 2 - m_window_height / 2));
+  m_window.setPosition(sf::Vector2i(0,0));
     player = 0;
     opponent = 1;
 
@@ -162,19 +163,6 @@ void Board::Update() {
                 }
             }
         } else {
-            // sf::Vector2i s_index =
-            //     MapCoordinateToElementArray(sf::Mouse::getPosition(m_window));
-            // if (s_index.x >= 0 && s_index.x <= 2 && s_index.y >= 0 &&
-            //     s_index.y <= 2)
-            // {
-            //   if (m_elements_array[s_index.x][s_index.y] > 0)
-            //   {
-            //     m_elements_array[s_index.x][s_index.y] = -1;
-            //     clicked = false;
-            //     m_player_turn = 1;
-            //     m_turn_sprite.setTexture(m_x_turn_texture);
-            //   }
-            // }
             sf::sleep(sf::seconds(1));
             sf::Vector2i best_move = FindBestMove(m_elements_array);
             m_elements_array[best_move.x][best_move.y] = 0;
@@ -404,4 +392,8 @@ int Board::Evaluate(int b[3][3]) {
             return -10;
     }
     return 0;
+}
+
+std::thread Board::operator()(){
+  return std::thread(&Board::run, this);
 }

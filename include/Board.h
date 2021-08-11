@@ -1,11 +1,12 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include <X11/Xlib.h>
 #include <cstdint>
 #include <iostream>
+#include <thread>
 class Board {
 public:
     Board();
+    std::thread operator()();
     void run();
 
 private:

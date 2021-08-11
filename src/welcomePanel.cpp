@@ -139,6 +139,9 @@ void WelcomePanel::onDisconnectClick(wxCommandEvent& event) {
 
 void WelcomePanel::onPlayTicTacToeClick(wxCommandEvent& event) {
     wxLogStatus("Tictactoe started");
+    Board* board = new Board;
+    std::thread th1 = board -> operator()();
+    th1.detach();
 }
 
-WelcomePanel::~WelcomePanel() { std::cout << "its working." << std::endl; }
+WelcomePanel::~WelcomePanel() { std::cout << "its working." << std::endl;}
