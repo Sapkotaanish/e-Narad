@@ -22,8 +22,9 @@ private:
     void Initialize();
     void Send(int& stats);
     void Receive();
+    void PlayGame();
     bool initialized;
-    bool sending, receiving;
+    bool sending, receiving, playing_game;
     unsigned int sender_port, receiver_port;
     Server server;
     Client client;
