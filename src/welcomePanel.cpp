@@ -1,6 +1,5 @@
 #include "welcomePanel.h"
-#include <iostream>
-#include <wx/wx.h>
+
 
 WelcomePanel::WelcomePanel(Window* window)
     : wxPanel(window, wxID_ANY),

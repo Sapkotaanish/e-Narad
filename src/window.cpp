@@ -1,6 +1,5 @@
 #include "welcomePanel.h"
 #include "window.h"
-#include <wx/wx.h>
 
 Window::Window(const wxString& title) : wxFrame(NULL, wxID_ANY, title, wxDefaultPosition, wxSize(600, 600), wxDEFAULT_FRAME_STYLE^ wxRESIZE_BORDER) {
     WelcomePanel* welcomePanel = new WelcomePanel(this);

@@ -1,11 +1,12 @@
 #pragma once
-#include "Client.hpp"
-#include "Server.hpp"
 #include "window.h"
 #include "wx/progdlg.h"
 #include <mutex>
 #include <thread>
 #include <wx/wx.h>
+#include "Client.hpp"
+#include "Server.hpp"
+// #include "Board.h"
 
 enum {
     send_button,
