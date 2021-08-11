@@ -133,7 +133,15 @@ void WelcomePanel::Receive() {
 }
 
 void WelcomePanel::onDisconnectClick(wxCommandEvent &event) {
-    wxLogStatus("Disconnect clicked");
+  if(initialized){
+    wxLogStatus("Disconnected.");
+    initialized = false;
+    client.initialized = false;
+    server.initialized = false;
+  }
+  else {
+    wxLogStatus("No one is connected.So no need to disconnect.");
+  }
 }
 
 void WelcomePanel::onPlayTicTacToeClick(wxCommandEvent &event) {
