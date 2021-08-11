@@ -39,7 +39,7 @@ Board::Board() {
                     sf::Style::Close | sf::Style::Titlebar, settings);
     // m_window.setPosition(sf::Vector2i(width / 2 - m_window_width / 2,
     //                                   height / 2 - m_window_height / 2));
-  m_window.setPosition(sf::Vector2i(0,0));
+    m_window.setPosition(sf::Vector2i(0, 0));
     player = 0;
     opponent = 1;
 
@@ -176,8 +176,8 @@ void Board::Update() {
 
 sf::Vector2i Board::MapCoordinateToElementArray(sf::Vector2i mouse_position) {
     int x, y;
-    int offseted_x = mouse_position.x - offset.x;
-    int offseted_y = mouse_position.y - offset.y;
+    int offseted_x = mouse_position.x - offset.x - 20;
+    int offseted_y = mouse_position.y - offset.y - 20;
     x = static_cast<int>(offseted_x / block_size);
     y = static_cast<int>(offseted_y / block_size);
     return sf::Vector2i(y, x);
@@ -394,6 +394,4 @@ int Board::Evaluate(int b[3][3]) {
     return 0;
 }
 
-std::thread Board::operator()(){
-  return std::thread(&Board::run, this);
-}
+std::thread Board::operator()() { return std::thread(&Board::run, this); }
