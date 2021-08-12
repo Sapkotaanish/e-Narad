@@ -26,6 +26,7 @@ public:
     void Initialize(unsigned int port);
     void Receive();
     bool keepReceiving{ true };
+    void disconnect();
 
 private:
     unsigned int port;

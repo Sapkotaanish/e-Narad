@@ -23,16 +23,20 @@ void Client::ReceiveBroadcast() {
         std::cout << "Error while broadcasting" << std::endl;
         exit(1);
     }
+    std::cout << "Broadcast received" << std::endl;
     std::string result;
     packet >> result;
     std::cout << result << std::endl;
     ip = result;
+    udp_socket.unbind();
 }
 
 void Client::Connect() {
-    if (socket.connect(ip, port) != sf::Socket::Done) {
-        std::cout << "Error in connection" << std::endl;
-        exit(1);
+    if (socket.connect(ip, port, sf::seconds(2)) != sf::Socket::Done) {
+        std::cout << "Couldnot connect at port " << port << std::endl;
+        port++;
+        std::cout << "Trying to connect at port " << port << std::endl;
+        Connect();
     }
 }
 
@@ -82,8 +86,8 @@ void Client::Receive() {
                     << std::endl;
                 std::fstream outfile(file_name, std::ios::out | std::ios::binary);
                 if (!outfile.is_open()) {
-                    std::cout << "File cannot be opened" << std::endl;
-                    exit(1);
+                    std::cout << "File cannot be opened with name " << file_name << std::endl;
+                    return;
                 }
 
                 while (received_size < size_of_file) {
@@ -105,5 +109,9 @@ void Client::Receive() {
             }
         }
     }
+}
+
+void Client::disconnect(){
+  socket.disconnect();
 }
 Client::~Client() { socket.disconnect(); }

@@ -138,6 +138,8 @@ void WelcomePanel::onDisconnectClick(wxCommandEvent &event) {
     initialized = false;
     client.initialized = false;
     server.initialized = false;
+    client.disconnect();
+    server.disconnect();
   }
   else {
     wxLogStatus("No one is connected.So no need to disconnect.");

@@ -26,6 +26,7 @@ public:
     void Initialize(unsigned int port);
     sf::TcpListener listener;
     sf::TcpSocket client;
+    void disconnect();
 
     bool keepSending{ true };
     Server();
