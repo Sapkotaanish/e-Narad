@@ -7,6 +7,7 @@ Server::Server() : client_connected(false), initialized(false) {
 }
 
 void Server::Initialize(unsigned int l_port) {
+    client_connected = false;
     port = l_port;
     std::thread t(&Server::BroadCast, this);
     Listen();
@@ -31,11 +32,11 @@ void Server::BroadCast() {
 
 void Server::Listen() {
     if (listener.listen(port) != sf::Socket::Done) {
-        std::cout << "Error While Listening. " << std::endl;
-        listener.close();
-        exit(1);
-    }
-    else {
+        std::cout << "Couldnot listen at port " << port << std::endl;
+        port++;
+        std::cout << "Receiving at port " << port << std::endl;
+        Listen();
+    } else {
         std::cout << "Listened" << std::endl;
     }
 }
@@ -46,16 +47,15 @@ void Server::Accept() {
         listener.close();
         std::cout << "Error while accepting." << std::endl;
         exit(1);
-    }
-    else {
+    } else {
         client_connected = true;
         std::cout << "Connected to receiver with IP "
-            << client.getRemoteAddress() << " .";
+                  << client.getRemoteAddress() << " .";
         std::cout << "My IP " << sf::IpAddress::getLocalAddress() << std::endl;
     }
 }
 
-void Server::Send(wxArrayString files, int& stats) {
+void Server::Send(wxArrayString files, int &stats) {
     sf::sleep(sf::seconds(1));
     sf::Packet fd_packet;
     sf::Uint8 file_count = files.GetCount();
@@ -100,15 +100,17 @@ void Server::Send(wxArrayString files, int& stats) {
             std::cout << "Sent: " << i << std::endl;
             sf::Packet ack;
             client.receive(ack);
-        }
-        else {
+        } else {
             std::cout << "Sending cancelled" << std::endl;
             break;
         }
     }
 }
 
-Server::~Server() {
+void Server::disconnect() {
     client.disconnect();
     listener.close();
+    port++;
 }
+
+Server::~Server() { client.disconnect(); }
