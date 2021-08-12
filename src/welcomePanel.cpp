@@ -60,7 +60,7 @@ void WelcomePanel::onSendClick(wxCommandEvent &event) {
             wxProgressDialog dialog(wxT("e-Narad"), wxT("asdf"), tc,
                                     currentWindow,
                                     wxPD_AUTO_HIDE | wxPD_CAN_ABORT |
-                                        wxPD_APP_MODAL | wxPD_ELAPSED_TIME);
+                wxPD_ELAPSED_TIME);
             dialog.Update(0);
             dialog.Resume();
             int stats = 0;
@@ -83,7 +83,8 @@ void WelcomePanel::onSendClick(wxCommandEvent &event) {
                 }
             }
         }
-    } else {
+    }
+    else {
         wxMessageBox("Please wait for the transfer of previous file.", "",
                      wxICON_ERROR);
     }
@@ -99,7 +100,8 @@ void WelcomePanel::onReceiveClick(wxCommandEvent &event) {
     if (!receiving) {
         std::thread thr(&WelcomePanel::Receive, this);
         thr.detach();
-    } else {
+    }
+    else {
         wxMessageBox("Please wait, you are already receiving files.", "",
                      wxICON_ERROR);
     }
