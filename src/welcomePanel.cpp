@@ -2,7 +2,7 @@
 
 
 WelcomePanel::WelcomePanel(Window* window)
-    : wxPanel(window, wxID_ANY), initialized(false), playing_game(false) {
+    : wxPanel(window, wxID_ANY), initialized(false) {
 
     currentWindow = window;
 
@@ -36,8 +36,6 @@ WelcomePanel::WelcomePanel(Window* window)
         wxCommandEventHandler(WelcomePanel::onReceiveClick));
     Connect(disconnect_button, wxEVT_COMMAND_BUTTON_CLICKED,
         wxCommandEventHandler(WelcomePanel::onDisconnectClick));
-    Connect(play_tictactoe, wxEVT_COMMAND_BUTTON_CLICKED,
-        wxCommandEventHandler(WelcomePanel::onPlayTicTacToeClick));
 };
 
 void WelcomePanel::onSendClick(wxCommandEvent& event) {
@@ -145,24 +143,4 @@ void WelcomePanel::onDisconnectClick(wxCommandEvent& event) {
         wxLogStatus("No one is connected.So no need to disconnect.");
     }
 }
-
-void WelcomePanel::onPlayTicTacToeClick(wxCommandEvent& event) {
-    wxLogStatus("Tictactoe started");
-    if (!playing_game) {
-        playing_game = true;
-        std::thread game_thread(&WelcomePanel::PlayGame, this);
-        game_thread.detach();
-    }
-    else {
-        wxLogStatus("Already one instance is running.");
-    }
-}
-
-void WelcomePanel::PlayGame() {
-    Board b;
-    b.run();
-    wxLogStatus("Tic tac toe quitted.");
-    playing_game = false;
-}
-
 WelcomePanel::~WelcomePanel() { std::cout << "its working." << std::endl; }

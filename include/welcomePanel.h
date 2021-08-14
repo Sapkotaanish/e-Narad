@@ -1,13 +1,13 @@
 #pragma once
-#include "window.h"
+#include <wx/wx.h>
 #include "wx/progdlg.h"
 #include <mutex>
 #include <thread>
+
 #include "Board.h"
-#include <wx/wx.h>
+#include "window.h"
 #include "Client.hpp"
 #include "Server.hpp"
-// #include "Board.h"
 
 enum {
     send_button,
@@ -23,9 +23,8 @@ private:
     void Initialize();
     void Send(int& stats);
     void Receive();
-    void PlayGame();
     bool initialized;
-    bool sending, receiving, playing_game;
+    bool sending, receiving;
     unsigned int sender_port, receiver_port;
     Server server;
     Client client;
@@ -40,6 +39,5 @@ public:
     void onSendClick(wxCommandEvent& event);
     void onReceiveClick(wxCommandEvent& event);
     void onDisconnectClick(wxCommandEvent& event);
-    void onPlayTicTacToeClick(wxCommandEvent& event);
     ~WelcomePanel();
 };
