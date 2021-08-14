@@ -3,7 +3,7 @@
 
 Window::Window(const wxString& title)
     : wxFrame(NULL, wxID_ANY, title, wxDefaultPosition, wxSize(600, 600),
-        wxDEFAULT_FRAME_STYLE^ wxRESIZE_BORDER) {
+        wxDEFAULT_FRAME_STYLE^ wxRESIZE_BORDER), playing_game(false) {
     WelcomePanel* welcomePanel = new WelcomePanel(this);
     SetBackgroundColour(wxColor("#D0BFBF"));
 
@@ -16,6 +16,10 @@ Window::Window(const wxString& title)
     help->Append(wxID_ABOUT, wxT("&About"));
     help->Append(id_help, wxT("Learn to use"));
 
+    //game menu
+    wxMenu* games = new wxMenu;
+    games->Append(play_tictactoe, wxT("&TicTacToe\tCtrl+G"));
+
     //menu items
     quit = new wxMenuItem(eNarad, wxID_EXIT, wxT("&Quit\tCtrl+W"));
 
@@ -26,6 +30,7 @@ Window::Window(const wxString& title)
     //appending menus to menubar
     menubar->Append(eNarad, wxT("&e-Narad"));
     menubar->Append(help, wxT("&Help"));
+    menubar->Append(games, wxT("&Games"));
 
     //connecting menu items to event handlers
     //quit 
@@ -41,6 +46,8 @@ Window::Window(const wxString& title)
     Connect(id_help, wxEVT_COMMAND_MENU_SELECTED,
         wxCommandEventHandler(Window::OnLearnToUse));
 
+    Connect(play_tictactoe, wxEVT_COMMAND_MENU_SELECTED,
+        wxCommandEventHandler(Window::onPlayTicTacToeClick));
     //finally displaying menubar
     SetMenuBar(menubar);
     CreateStatusBar();
@@ -92,7 +99,24 @@ void Window::OnClose(wxCloseEvent& event) {
         event.Veto();
     }
 }
+void Window::onPlayTicTacToeClick(wxCommandEvent& event) {
+    wxLogStatus("Tictactoe started");
+    if (!playing_game) {
+        playing_game = true;
+        std::thread game_thread(&Window::PlayGame, this);
+        game_thread.detach();
+    }
+    else {
+        wxLogStatus("Already one instance is running.");
+    }
+}
 
+void Window::PlayGame() {
+    Board b;
+    b.run();
+    wxLogStatus("Tic tac toe quitted.");
+    playing_game = false;
+}
 void Window::setStatus(wxString status) {
     SetStatusText(status);
 }

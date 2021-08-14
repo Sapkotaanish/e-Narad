@@ -7,6 +7,7 @@
 
 class Window : public wxFrame {
 private:
+    bool playing_game;
     enum { id_help = 1 };
 
 public:
@@ -21,6 +22,9 @@ public:
     void OnClose(wxCloseEvent& event);
     void OnAbout(wxCommandEvent& event);
     void OnLearnToUse(wxCommandEvent& event);
+
+    void onPlayTicTacToeClick(wxCommandEvent& event);
+    void PlayGame();
 };
 
 #endif
