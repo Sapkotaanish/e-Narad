@@ -13,9 +13,6 @@ WelcomePanel::WelcomePanel(Window* window)
     wxButton* disconnectButton =
         new wxButton(this, disconnect_button, "Disconnect", wxDefaultPosition,
             wxSize(150, 40));
-    wxButton* playTicTacToeButton =
-        new wxButton(this, play_tictactoe, "Play TicTacToe", wxDefaultPosition,
-            wxSize(150, 40));
     wxBoxSizer* pSizer = new wxBoxSizer(wxVERTICAL);
     sending = false;
     pSizer->AddStretchSpacer(1);
@@ -24,8 +21,6 @@ WelcomePanel::WelcomePanel(Window* window)
     pSizer->Add(receiveButton, 0, wxALIGN_CENTER, wxEXPAND);
     pSizer->AddSpacer((10, 10));
     pSizer->Add(disconnectButton, 0, wxALIGN_CENTER, wxEXPAND);
-    pSizer->AddSpacer((10, 10));
-    pSizer->Add(playTicTacToeButton, 0, wxALIGN_CENTER, wxEXPAND);
     pSizer->AddStretchSpacer(1);
 
     this->SetSizer(pSizer);
