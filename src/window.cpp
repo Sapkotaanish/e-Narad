@@ -13,8 +13,8 @@ Window::Window(const wxString& title)
 
     //creating menu in menubar
     help = new wxMenu;
-    help->Append(wxID_ABOUT, wxT("&About"));
-    help->Append(id_help, wxT("Learn to use"));
+    help->Append(wxID_ABOUT, wxT("About\tAlt+H"));
+    help->Append(id_help, wxT("Learn to use\tAlt+L"));
 
     //game menu
     wxMenu* games = new wxMenu;
