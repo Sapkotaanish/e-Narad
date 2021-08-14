@@ -20,11 +20,11 @@ void Server::Initialize(unsigned int l_port) {
 
 void Server::BroadCast() {
     sf::UdpSocket socket;
-    unsigned short broadcasting_port = 52000;
+    unsigned short broadcasting_port{ 52000 };
     sf::IpAddress address = sf::IpAddress::Broadcast;
     sf::Packet packet;
     packet << sf::IpAddress::getLocalAddress().toString();
-    int count = 0;
+    int count{ 0 };
     while (!client_connected) {
         socket.send(packet, address, broadcasting_port);
     }
@@ -36,7 +36,8 @@ void Server::Listen() {
         port++;
         std::cout << "Receiving at port " << port << std::endl;
         Listen();
-    } else {
+    }
+    else {
         std::cout << "Listened" << std::endl;
     }
 }
@@ -47,25 +48,26 @@ void Server::Accept() {
         listener.close();
         std::cout << "Error while accepting." << std::endl;
         exit(1);
-    } else {
+    }
+    else {
         client_connected = true;
         std::cout << "Connected to receiver with IP "
-                  << client.getRemoteAddress() << " .";
+            << client.getRemoteAddress() << " .";
         std::cout << "My IP " << sf::IpAddress::getLocalAddress() << std::endl;
     }
 }
 
-void Server::Send(wxArrayString files, int &stats) {
+void Server::Send(wxArrayString files, int& stats) {
     sf::sleep(sf::seconds(1));
     sf::Packet fd_packet;
-    sf::Uint8 file_count = files.GetCount();
-    std::cout << "File count in server: " << (int)file_count << std::endl;
+    sf::Uint8 file_count{ files.GetCount() };
+    std::cout << "File count in server: " << static_cast<int>(file_count) << std::endl;
     fd_packet << file_count;
     Server::statistics.total_count = file_count;
     client.send(fd_packet);
     sf::Packet ack_p;
     client.receive(ack_p);
-    int count = 0;
+    int count{ 0 };
     for (auto i : files) {
         if (keepSending) {
             std::ifstream i_file(i, std::ios::ate | std::ios::binary);
@@ -74,18 +76,19 @@ void Server::Send(wxArrayString files, int &stats) {
                 listener.close();
                 exit(1);
             }
-            Server::statistics.current_count = ++count;
+            count++;
+            Server::statistics.current_count = count;
             sf::Packet file_data_packet;
-            std::size_t size = i_file.seekg(0, std::ios::end).tellg();
-            Server::statistics.total_size = (sf::Uint64)size;
+            sf::Uint64 size = i_file.seekg(0, std::ios::end).tellg();
+            Server::statistics.total_size = static_cast<sf::Uint64>(size);
             file_data_packet << static_cast<std::string>(i);
-            file_data_packet << (sf::Uint64)size;
+            file_data_packet << size;
             sf::sleep(sf::seconds(1.5));
             client.send(file_data_packet);
             const size_t packet_size = size < 1000 ? size : 1000;
             char data[packet_size];
             i_file.seekg(0, std::ios::beg);
-            size_t sent_size = 0;
+            size_t sent_size{ 0 };
             std::cout << "Sending " << size << " " << i << std::endl;
             while (!i_file.eof()) {
                 i_file.read(data, packet_size);
@@ -100,7 +103,8 @@ void Server::Send(wxArrayString files, int &stats) {
             std::cout << "Sent: " << i << std::endl;
             sf::Packet ack;
             client.receive(ack);
-        } else {
+        }
+        else {
             std::cout << "Sending cancelled" << std::endl;
             break;
         }

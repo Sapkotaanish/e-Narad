@@ -61,12 +61,12 @@ void Window::OnQuit(wxCommandEvent& WXUNUSED(event)) {
 //about button handler
 void Window::OnAbout(wxCommandEvent& WXUNUSED(event)) {
     wxString msg;
-    wxString about =
+    wxString about{
         "A simple file transfer app with fast and reliable "
         "service made using core concepts of OOP in C++ aided by "
         "some popular libraries.\n\nDeveloped by: \n1. Anish "
         "Sapkota \n2. Nabin Khanal \n3. Kushal Subedi \n\n "
-        "Libraries used: \n1. wxWidgets(UI) \n2. SFML(Networking & Game)";
+        "Libraries used: \n1. wxWidgets(UI) \n2. SFML(Networking & Game)" };
     msg.Printf(about);
 
     wxMessageBox(msg, "About", wxOK | wxICON_INFORMATION);
@@ -89,7 +89,7 @@ void Window::OnClose(wxCloseEvent& event) {
         new wxMessageDialog(NULL, wxT("Are you sure to quit?"), wxT("Question"),
             wxYES_NO | wxNO_DEFAULT | wxICON_QUESTION);
 
-    int ret = dial->ShowModal();
+    int ret{ dial->ShowModal() };
     dial->Destroy();
 
     if (ret == wxID_YES) {

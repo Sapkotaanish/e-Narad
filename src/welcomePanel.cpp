@@ -55,11 +55,14 @@ void WelcomePanel::onSendClick(wxCommandEvent& event) {
                 wxPD_ELAPSED_TIME);
             dialog.Update(0);
             dialog.Resume();
-            int stats = 0;
+            int stats{ 0 };
             std::thread thr1(&WelcomePanel::Send, this, std::ref(stats));
             thr1.detach();
-            bool cont = true;
+            bool cont{ true };
             std::cout << "Total file count in wP: " << tc << std::endl;
+            if (stats == tc)
+                wxMessageBox(wxT("Completed"), wxT("e-Narad"));
+
             while (stats != tc) {
                 cont = dialog.Update(stats, wxString(&"Sending "[stats / tc]));
                 if (!cont) {

@@ -1,6 +1,5 @@
-#include "../include/Client.hpp"
-using std::cout;
-using std::endl;
+#include "Client.hpp"
+
 
 Client::Client() {
     system("mkdir -p ~/Downloads/e-Narad");
@@ -10,14 +9,14 @@ Client::Client() {
 
 void Client::ReceiveBroadcast() {
     sf::UdpSocket udp_socket;
-    unsigned short broadcasting_port = 52000;
+    unsigned short broadcasting_port{ 52000 };
     sf::IpAddress address = sf::IpAddress::Broadcast;
     if (udp_socket.bind(broadcasting_port) != sf::Socket::Done) {
         std::cout << "Couldnot bind the socket. " << std::endl;
         exit(1);
     }
     sf::Packet packet;
-    cout << "started_receiving_for_broadcast" << endl;
+    std::cout << "started_receiving_for_broadcast" << std::endl;
     if (udp_socket.receive(packet, address, broadcasting_port) !=
         sf::Socket::Done) {
         std::cout << "Error while broadcasting" << std::endl;
@@ -56,7 +55,7 @@ void Client::Receive() {
         fd_packet >> file_count;
         statistics.total_count = file_count;
         sf::Packet ack_packet;
-        std::string ack = "received";
+        std::string ack{ "received" };
         ack_packet << ack;
         socket.send(ack_packet);
         for (int i = 0; i < file_count; i++) {
@@ -70,13 +69,13 @@ void Client::Receive() {
                 socket.receive(fn_packet);
                 std::string file_name;
                 fn_packet >> file_name >> size;
-                std::size_t size_of_file = (std::size_t)size;
+                std::size_t size_of_file = static_cast<std::size_t>(size);
                 const sf::Uint64 packet_size =
                     size_of_file < 1000 ? size_of_file : 1000;
                 statistics.total_size = size_of_file;
                 char data[packet_size];
-                std::size_t received_size = 0;
-                const size_t last_slash_idx = file_name.find_last_of("/");
+                std::size_t received_size{ 0 };
+                const size_t last_slash_idx{ file_name.find_last_of("/") };
                 if (std::string::npos != last_slash_idx) {
                     file_name.erase(0, last_slash_idx + 1);
                 }
@@ -111,7 +110,7 @@ void Client::Receive() {
     }
 }
 
-void Client::disconnect(){
-  socket.disconnect();
+void Client::disconnect() {
+    socket.disconnect();
 }
 Client::~Client() { socket.disconnect(); }
