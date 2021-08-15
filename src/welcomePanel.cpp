@@ -60,6 +60,9 @@ void WelcomePanel::onSendClick(wxCommandEvent& event) {
             thr1.detach();
             bool cont{ true };
             std::cout << "Total file count in wP: " << tc << std::endl;
+            if (stats == tc)
+                wxMessageBox(wxT("Completed"), wxT("e-Narad"));
+
             while (stats != tc) {
                 cont = dialog.Update(stats, wxString(&"Sending "[stats / tc]));
 
