@@ -56,15 +56,17 @@ void WelcomePanel::onSendClick(wxCommandEvent& event) {
             dialog.Update(0);
             dialog.Resume();
             int stats{ 0 };
+            wxString message;
             std::thread thr1(&WelcomePanel::Send, this, std::ref(stats));
             thr1.detach();
             bool cont{ true };
             std::cout << "Total file count in wP: " << tc << std::endl;
-            if (stats == tc)
-                wxMessageBox(wxT("Completed"), wxT("e-Narad"));
 
             while (stats != tc) {
-                cont = dialog.Update(stats, wxString(&"Sending "[stats / tc]));
+                message = "Sending: ";
+                message << stats << "/" << tc;
+
+                cont = dialog.Update(stats, message);
 
                 if (!cont) {
                     if (wxMessageBox(wxT("Do you really want to cancel ? "),
@@ -79,7 +81,7 @@ void WelcomePanel::onSendClick(wxCommandEvent& event) {
                 }
             }
             if (stats == tc) {
-                wxMessageBox("Completed", "e-Narad");
+                wxMessageBox("Completed", "e-Narad", wxSTAY_ON_TOP);
             }
 
         }
