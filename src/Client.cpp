@@ -46,7 +46,7 @@ void Client::Initialize(unsigned int l_port) {
     initialized = true;
 }
 
-void Client::Receive() {
+void Client::Receive(int& tc, int& stats, wxString& currentFile) {
     const char* home_dir = std::getenv("HOME");
     while (true) {
         sf::Packet fd_packet;
@@ -54,11 +54,13 @@ void Client::Receive() {
         sf::Uint8 file_count;
         fd_packet >> file_count;
         statistics.total_count = file_count;
+        tc = file_count;
         sf::Packet ack_packet;
         std::string ack{ "received" };
         ack_packet << ack;
         socket.send(ack_packet);
         for (int i = 0; i < file_count; i++) {
+            stats++;
             if (keepReceiving) {
                 statistics.current_count = i + 1;
                 std::cout << statistics.current_count << std::endl;
@@ -69,6 +71,7 @@ void Client::Receive() {
                 socket.receive(fn_packet);
                 std::string file_name;
                 fn_packet >> file_name >> size;
+                currentFile = file_name;
                 std::size_t size_of_file = static_cast<std::size_t>(size);
                 const sf::Uint64 packet_size =
                     size_of_file < 1000 ? size_of_file : 1000;

@@ -64,7 +64,7 @@ void WelcomePanel::onSendClick(wxCommandEvent& event) {
 
             while (stats != tc) {
                 message = "Sending: ";
-                message << stats << "/" << tc;
+                message << stats << "/" << tc << " \nFile: " << files[stats];
 
                 cont = dialog.Update(stats, message);
 
@@ -100,8 +100,46 @@ void WelcomePanel::onReceiveClick(wxCommandEvent& event) {
         initialized = true;
     }
     if (!receiving) {
-        std::thread thr(&WelcomePanel::Receive, this);
+        int tc{ 5 };
+        int stats{ 0 };
+        wxString currentFile = "NULL";
+        std::thread thr(&WelcomePanel::Receive, this, std::ref(tc), std::ref(stats), std::ref(currentFile));
         thr.detach();
+        wxProgressDialog dialog(wxT("e-Narad"), wxT("asdf"), 1,
+            currentWindow,
+            wxPD_AUTO_HIDE | wxPD_CAN_ABORT |
+            wxPD_ELAPSED_TIME);
+        dialog.Update(0);
+        dialog.Resume();
+        wxString message;
+        bool cont{ true };
+        std::cout << "Total file count in wP: " << tc << std::endl;
+
+        while (stats != tc) {
+            dialog.SetRange(tc);
+            message = "Sending: ";
+            message << stats << "/" << tc << " \nFile: " << currentFile;
+
+            cont = dialog.Update(stats, message);
+
+            if (!cont) {
+                if (wxMessageBox(wxT("Do you really want to cancel ? "),
+                    wxT("e-Narad"),
+                    wxYES_NO | wxICON_QUESTION) == wxYES) {
+                    client.keepReceiving = false;
+                    server.keepSending = false;
+                    wxLogStatus("Disconnected");
+                    break;
+                }
+                dialog.Resume();
+            }
+            if (stats == tc) {
+                wxMessageBox("Completed", "e-Narad", wxS  (use "git restore <file>..." to discard changes in working directory)
+        modified:   CMakeLists.txt
+        modified:   include/Client.hpp
+        modified:   include/welcomePanel.hTAY_ON_TOP);
+            }
+        }
     }
     else {
         wxMessageBox("Please wait, you are already receiving files.", "",
@@ -124,13 +162,12 @@ void WelcomePanel::Send(int& stats) {
     m.unlock();
 }
 
-void WelcomePanel::Receive() {
-    std::mutex mt;
+void WelcomePanel::Receive(int& tc, int& stats, wxString& currentFile) {
     mt.lock();
     receiving = true;
     if (!client.initialized)
         client.Initialize(receiver_port);
-    client.Receive();
+    client.Receive(tc, stats, currentFile);
     receiving = false;
     mt.unlock();
 }

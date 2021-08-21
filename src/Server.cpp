@@ -77,6 +77,7 @@ void Server::Send(wxArrayString files, int& stats) {
                 exit(1);
             }
             count++;
+            stats++;
             Server::statistics.current_count = count;
             sf::Packet file_data_packet;
             sf::Uint64 size = i_file.seekg(0, std::ios::end).tellg();
@@ -99,7 +100,6 @@ void Server::Send(wxArrayString files, int& stats) {
             }
             statistics.sent_size = 0;
             i_file.close();
-            stats++;
             std::cout << "Sent: " << i << std::endl;
             sf::Packet ack;
             client.receive(ack);

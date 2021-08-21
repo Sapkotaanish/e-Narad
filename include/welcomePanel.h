@@ -22,7 +22,7 @@ private:
     std::thread t;
     void Initialize();
     void Send(int& stats);
-    void Receive();
+    void Receive(int& tc, int& stats, wxString& currentFile);
     bool initialized;
     bool sending, receiving;
     unsigned int sender_port, receiver_port;
@@ -36,6 +36,7 @@ public:
     Window* currentWindow;
     bool ready;
     std::mutex m;
+    std::mutex mt;
     void onSendClick(wxCommandEvent& event);
     void onReceiveClick(wxCommandEvent& event);
     void onDisconnectClick(wxCommandEvent& event);

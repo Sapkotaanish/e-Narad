@@ -24,7 +24,7 @@ public:
     client_stats statistics;
     bool initialized;
     void Initialize(unsigned int port);
-    void Receive();
+    void Receive(int& tc, int& stats, wxString& currentFile);
     bool keepReceiving{ true };
     void disconnect();
 
