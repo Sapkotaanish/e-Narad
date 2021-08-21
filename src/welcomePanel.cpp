@@ -117,7 +117,7 @@ void WelcomePanel::onReceiveClick(wxCommandEvent& event) {
 
         while (stats != tc) {
             dialog.SetRange(tc);
-            message = "Sending: ";
+            message = "Receiving: ";
             message << stats << "/" << tc << " \nFile: " << currentFile;
 
             cont = dialog.Update(stats, message);
@@ -134,10 +134,7 @@ void WelcomePanel::onReceiveClick(wxCommandEvent& event) {
                 dialog.Resume();
             }
             if (stats == tc) {
-                wxMessageBox("Completed", "e-Narad", wxS  (use "git restore <file>..." to discard changes in working directory)
-        modified:   CMakeLists.txt
-        modified:   include/Client.hpp
-        modified:   include/welcomePanel.hTAY_ON_TOP);
+                wxMessageBox("Completed", "e-Narad", wxSTAY_ON_TOP);
             }
         }
     }
