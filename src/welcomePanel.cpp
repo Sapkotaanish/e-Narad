@@ -63,9 +63,7 @@ void WelcomePanel::onSendClick(wxCommandEvent& event) {
             std::thread thr1(&WelcomePanel::Send, this, std::ref(stats));
             thr1.detach();
             bool cont{ true };
-            std::cout << "Total file count in wP: " << tc << std::endl;
-
-            while (stats != tc) {
+            while (stats != tc && cont) {
                 message = "Sending: ";
                 message << stats << "/" << tc << " \nFile: " << files[stats];
 
@@ -112,15 +110,13 @@ void WelcomePanel::onReceiveClick(wxCommandEvent& event) {
         thr.detach();
         wxProgressDialog dialog(wxT("e-Narad"), wxT("asdf"), 1,
             currentWindow,
-            wxPD_AUTO_HIDE | wxPD_CAN_ABORT |
+            wxPD_CAN_ABORT |
             wxPD_ELAPSED_TIME);
         dialog.Update(0);
         dialog.Resume();
         wxString message;
         bool cont{ true };
-        std::cout << "Total file count in wP: " << tc << std::endl;
-
-        while (stats != tc) {
+        while (stats != tc && cont) {
             dialog.SetRange(tc);
             message = "Receiving: ";
             message << stats << "/" << tc << " \nFile: " << currentFile;

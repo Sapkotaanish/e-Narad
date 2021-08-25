@@ -90,14 +90,14 @@ void Server::Send(wxArrayString files, int& stats) {
             i_file.seekg(0, std::ios::beg);
             size_t sent_size{ 0 };
             std::cout << "Sending " << size << " " << i << std::endl;
-            stats++;
             while (!i_file.eof()) {
                 i_file.read(data, packet_size);
                 client.send(data, packet_size);
                 sent_size += packet_size;
                 Server::statistics.sent_size = sent_size;
-                std::cout << sent_size << std::endl;
             }
+            stats++;
+
             statistics.sent_size = 0;
             i_file.close();
             std::cout << "Sent: " << i << std::endl;

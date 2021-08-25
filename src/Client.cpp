@@ -71,7 +71,6 @@ void Client::Receive(int& tc, int& stats, wxString& currentFile) {
                 std::string file_name;
                 fn_packet >> file_name >> size;
                 currentFile = file_name;
-                stats++;
                 std::size_t size_of_file = static_cast<std::size_t>(size);
                 const sf::Uint64 packet_size =
                     size_of_file < 1000 ? size_of_file : 1000;
@@ -98,6 +97,8 @@ void Client::Receive(int& tc, int& stats, wxString& currentFile) {
                     received_size += byte_received;
                     statistics.received_size = received_size;
                 }
+                stats++;
+
                 statistics.received_size = 0;
                 std::cout << "Received " << file_name << std::endl;
                 outfile.close();
