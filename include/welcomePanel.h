@@ -29,6 +29,7 @@ private:
     Server server;
     Client client;
     int tc{ 0 };
+    wxButton* disconnectButton;
 
 public:
     WelcomePanel(Window* window);

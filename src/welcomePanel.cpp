@@ -10,7 +10,7 @@ WelcomePanel::WelcomePanel(Window* window)
         wxDefaultPosition, wxSize(150, 40));
     wxButton* receiveButton = new wxButton(this, receive_button, "Receive",
         wxDefaultPosition, wxSize(150, 40));
-    wxButton* disconnectButton =
+    disconnectButton =
         new wxButton(this, disconnect_button, "Disconnect", wxDefaultPosition,
             wxSize(150, 40));
     wxBoxSizer* pSizer = new wxBoxSizer(wxVERTICAL);
@@ -19,10 +19,11 @@ WelcomePanel::WelcomePanel(Window* window)
     pSizer->Add(sendButton, 0, wxALIGN_CENTER);
     pSizer->AddSpacer((10, 10));
     pSizer->Add(receiveButton, 0, wxALIGN_CENTER, wxEXPAND);
+    std::cout << "asssssssssssssssssssssssssssssssssfddddffffffffffFF";
     pSizer->AddSpacer((10, 10));
     pSizer->Add(disconnectButton, 0, wxALIGN_CENTER, wxEXPAND);
     pSizer->AddStretchSpacer(1);
-
+    disconnectButton->Hide();
     this->SetSizer(pSizer);
     this->Layout();
     Connect(send_button, wxEVT_COMMAND_BUTTON_CLICKED,
@@ -42,6 +43,8 @@ void WelcomePanel::onSendClick(wxCommandEvent& event) {
     }
 
     if (!sending) {
+        disconnectButton->Show();
+        Layout();
         wxFileDialog* openFileDialog = new wxFileDialog(
             this, "", "", "", "", wxFD_MULTIPLE | wxFD_PREVIEW);
         if (openFileDialog->ShowModal() == wxID_OK) {
@@ -100,6 +103,8 @@ void WelcomePanel::onReceiveClick(wxCommandEvent& event) {
         initialized = true;
     }
     if (!receiving) {
+        disconnectButton->Show();
+        Layout();
         int tc{ 5 };
         int stats{ 0 };
         wxString currentFile = "NULL";
@@ -170,6 +175,8 @@ void WelcomePanel::Receive(int& tc, int& stats, wxString& currentFile) {
 }
 
 void WelcomePanel::onDisconnectClick(wxCommandEvent& event) {
+    disconnectButton->Hide();
+    Layout();
     if (initialized) {
         wxLogStatus("Disconnected.");
         initialized = false;
