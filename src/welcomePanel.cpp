@@ -62,7 +62,7 @@ void WelcomePanel::onSendClick(wxCommandEvent& event) {
             std::thread thr1(&WelcomePanel::Send, this, std::ref(stats));
             thr1.detach();
             bool cont{ true };
-            while (stats != tc && cont) {
+            while (stats != tc) {
                 message = "Sending: ";
                 message << stats << "/" << tc << " \nFile: " << files[stats];
 
@@ -77,7 +77,8 @@ void WelcomePanel::onSendClick(wxCommandEvent& event) {
                         wxLogStatus("Disconnected");
                         break;
                     }
-                    dialog.Resume();
+                    else
+                        dialog.Resume();
                 }
             }
             if (stats == tc) {
@@ -115,7 +116,7 @@ void WelcomePanel::onReceiveClick(wxCommandEvent& event) {
         dialog.Resume();
         wxString message;
         bool cont{ true };
-        while (stats != tc && cont) {
+        while (stats != tc) {
             dialog.SetRange(tc);
             message = "Receiving: ";
             message << stats << "/" << tc << " \nFile: " << currentFile;
@@ -133,7 +134,8 @@ void WelcomePanel::onReceiveClick(wxCommandEvent& event) {
                     wxLogStatus("Disconnected");
                     break;
                 }
-                dialog.Resume();
+                else
+                    dialog.Resume();
             }
             if (stats == tc) {
                 wxMessageBox("Completed", "e-Narad", wxSTAY_ON_TOP);
