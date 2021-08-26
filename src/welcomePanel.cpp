@@ -19,7 +19,6 @@ WelcomePanel::WelcomePanel(Window* window)
     pSizer->Add(sendButton, 0, wxALIGN_CENTER);
     pSizer->AddSpacer((10, 10));
     pSizer->Add(receiveButton, 0, wxALIGN_CENTER, wxEXPAND);
-    std::cout << "asssssssssssssssssssssssssssssssssfddddffffffffffFF";
     pSizer->AddSpacer((10, 10));
     pSizer->Add(disconnectButton, 0, wxALIGN_CENTER, wxEXPAND);
     pSizer->AddStretchSpacer(1);
@@ -171,18 +170,17 @@ void WelcomePanel::Receive(int& tc, int& stats, wxString& currentFile) {
 }
 
 void WelcomePanel::onDisconnectClick(wxCommandEvent& event) {
-    disconnectButton->Hide();
-    Layout();
-    if (initialized) {
+    if (wxMessageBox(wxT("Do you really want to disconnect ? "),
+        wxT("e-Narad"),
+        wxYES_NO | wxICON_QUESTION) == wxYES) {
+        disconnectButton->Hide();
+        Layout();
         wxLogStatus("Disconnected.");
         initialized = false;
         client.initialized = false;
         server.initialized = false;
         client.disconnect();
         server.disconnect();
-    }
-    else {
-        wxLogStatus("No one is connected.So no need to disconnect.");
     }
 }
 WelcomePanel::~WelcomePanel() { std::cout << "its working." << std::endl; }
