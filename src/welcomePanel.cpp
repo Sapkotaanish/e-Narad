@@ -128,6 +128,8 @@ void WelcomePanel::onReceiveClick(wxCommandEvent& event) {
                     wxYES_NO | wxICON_QUESTION) == wxYES) {
                     client.keepReceiving = false;
                     server.keepSending = false;
+                    receiving = false;
+                    sending = false;
                     wxLogStatus("Disconnected");
                     break;
                 }
@@ -181,6 +183,8 @@ void WelcomePanel::onDisconnectClick(wxCommandEvent& event) {
         server.initialized = false;
         client.disconnect();
         server.disconnect();
+        receiving = false;
+        sending = false;
     }
 }
 WelcomePanel::~WelcomePanel() { std::cout << "its working." << std::endl; }
